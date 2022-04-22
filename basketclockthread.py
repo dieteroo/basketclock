@@ -56,6 +56,7 @@ StartupScreen = True  # allow configuration
 ResetCounterOptions = (600, 540, 480, 420, 360, 300, 240, 180, 120, 60)
 TimerChoice = 0  # to allow selection of the Timer
 
+# delay to allow the AP abd network to correctly launch before the program starts
 time.sleep(15)
 
 #function for the changing digits

@@ -29,6 +29,7 @@ textLabelAway = fontLabel.render('VISITOR', True, (100, 100, 100), (0, 0, 0))
 textLabelFouls = fontLabel.render('FOULS', True, (100, 100, 100), (0, 0, 0))
 textLabelPeriod = fontLabel.render('P', True, (100, 100, 100), (0, 0, 0))
 TimeOutText = ("", "*", "**")
+PauzeCounterString = ""
 
 color = (100, 255, 255)
 
@@ -55,12 +56,12 @@ TimeOutRemaining = 0
 StartupScreen = True  # allow configuration
 ResetCounterOptions = (600, 540, 480, 420, 360, 300, 240, 180, 120, 60)
 TimerChoice = 0  # to allow selection of the Timer
+PauzeCounter = 0
 
-# delay to allow the AP abd network to correctly launch before the program starts
 time.sleep(15)
 
 #function for the changing digits
-def ScoreBoardUpdate(ScoreHome, ScoreAway, FoulsHome, FoulsAway, Clock, Period, TimeOutRemaining):
+def ScoreBoardUpdate(ScoreHome, ScoreAway, FoulsHome, FoulsAway, Clock, Period, TimeOutRemaining, PauzeCounterString):
     global textLabelHome, textLabelAway, textLabelFouls, textLabelPeriod
 
     textScoreHome = fontScore.render(
@@ -85,8 +86,9 @@ def ScoreBoardUpdate(ScoreHome, ScoreAway, FoulsHome, FoulsAway, Clock, Period, 
 
     textTimeOut = fontScore.render(
         str(TimeOutRemaining), True, (255, 255, 0), (0, 0, 0))
-    textPeriod = fontScoreSmall.render(
-        str(Period), True, (255, 255, 0), (0, 0, 0))
+
+    textPauzeCounter = fontScore.render(str(PauzeCounterString), True, (255, 255, 0), (0, 0, 0))
+    textPeriod = fontScoreSmall.render(str(Period), True, (255, 255, 0), (0, 0, 0))
 
     textTimeOutHome = fontScore.render(
         TimeOutText[TimeOutHome], True, (255, 255, 0), (0, 0, 0))
@@ -107,6 +109,7 @@ def ScoreBoardUpdate(ScoreHome, ScoreAway, FoulsHome, FoulsAway, Clock, Period, 
     textRectFoulsHome = textFoulsHome.get_rect(center=(200, 600))
     textRectFoulsAway = textFoulsAway.get_rect(center=(1080, 600))
     textRectTimeOut = textTimeOut.get_rect(center=(640, 600))
+    textRectPauzeCounter = textPauzeCounter.get_rect(center=(640, 600))
     textRectPeriod = textPeriod.get_rect(center=(660, 50))
     textRectTimeOutHome = textTimeOutHome.get_rect(center=(200, 350))
     textRectTimeOutAway = textTimeOutAway.get_rect(center=(1080, 350))
@@ -124,6 +127,8 @@ def ScoreBoardUpdate(ScoreHome, ScoreAway, FoulsHome, FoulsAway, Clock, Period, 
     scr.blit(textFoulsAway, textRectFoulsAway)
     if not TimeOutRemaining == 0:
         scr.blit(textTimeOut, textRectTimeOut)
+    if not PauzeCounterString == "":
+        scr.blit(textPauzeCounter, textRectPauzeCounter)
     scr.blit(textPeriod, textRectPeriod)
     scr.blit(textTimeOutHome, textRectTimeOutHome)
     scr.blit(textTimeOutAway, textRectTimeOutAway)
@@ -308,10 +313,20 @@ while running:
 
     if RemainingTime == 0:
         ClockPauze = True
+        #Counter that will count up to show pauze time
+        PauzeCounterUp = round(time.time()-PauzeCounter) 
+        PauzeCounterMin = math.floor(PauzeCounterUp/60)
+        PauzeCounterSec = PauzeCounterUp - PauzeCounterMin*60
+        PauzeCounterString = str(int(PauzeCounterMin)) + \
+        " : " + str(int(PauzeCounterSec))            
+            
         if not(EndSoundPlayed):
             EndSoundPlayed = True
             EndSound.play()
-
+    else:
+        PauzeCounter = time.time()
+        PauzeCounterString = ""
+        
     RemainingMin = math.floor(RemainingTime/60)
     RemainingSec = RemainingTime - RemainingMin*60
     RemainingString = str(int(RemainingMin)) + \
@@ -329,6 +344,6 @@ while running:
 
     if not(StartupScreen):
         ScoreBoardUpdate(ScoreHome, ScoreAway, FoolsHome,
-                         FoolsAway, RemainingString, Period, TimeOutRemaining)
+                         FoolsAway, RemainingString, Period, TimeOutRemaining, PauzeCounterString)
 
 newthread.stop()

@@ -1,3 +1,22 @@
+#How to autoactivate the script#
+###Boot from a graphical shell###
+Advantage of this option is that the script is running in a graphical shell.  This allows easy changes to the resolution or graphical settings.
+However, the graphical interface is exposed with a simple "ESC"
+
+Procedure
+---------
+mkdir /home/pi/.config/autostart
+nano /home/pi/.config/autostart/clock.desktop
+
+Copy in the following text into the clock.desktop file. Feel free to change the Name and Exec variables to your particular application.
+
+[Desktop Entry]
+Type=Application
+Name=Clock
+Exec=/usr/bin/python3 /home/pi/clock.py
+
+###Kiosk mode or autorun without any option to go to the graphical shell###
+
 root@raspberrypi:/home/pi# crontab -e
 crontab: installing new crontab
 root@raspberrypi:/home/pi# crontab -l

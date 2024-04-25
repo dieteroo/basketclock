@@ -6,6 +6,7 @@ import os
 from time import sleep
 import socket
 import threading
+from gpiozero import Buzzer
 
 # Set the default path to the python directory
 sourceFileDir = os.path.dirname(os.path.abspath(__file__))
@@ -44,6 +45,12 @@ FoulsAway = 0
 Period = 1
 EndSound = pygame.mixer.Sound('sounds/BUZZER.WAV')
 EndSoundPlayed = False  # required to only play 1 time
+# Buzzer - Connect your piezobuzzer to ground and GPIO pin16
+buzzer = Buzzer(16)
+def PiezoBuzzer():
+    buzzer.on()
+    sleep(0.5)
+    buzzer.off()
 TimeOut = 60
 TimeOutRunning = False
 TimeOutHome = 0
@@ -299,6 +306,7 @@ while running:
         if not(EndSoundPlayed):
             EndSoundPlayed = True
             EndSound.play()
+            PiezoBuzzer()
     else:
         PauzeCounter = time.time()
         PauzeCounterString = ""
@@ -311,10 +319,12 @@ while running:
         if TimeOutRemaining <= 0:
             TimeOutRunning = False
             EndSound.play()
+            PiezoBuzzer()
         else:
             TimeOutRemaining = TimeOut - int(round(time.time()-TimeOutStart))
             if TimeOutRemaining == 10:
                 EndSound.play()
+                PiezoBuzzer()
     if not(StartupScreen):
         ScoreBoardUpdate(ScoreHome, ScoreAway, FoulsHome, FoulsAway, RemainingString, Period, TimeOutRemaining, PauzeCounterString)
 

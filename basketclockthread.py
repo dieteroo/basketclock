@@ -11,98 +11,80 @@ import threading
 sourceFileDir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(sourceFileDir)
 
-#pygame library initiation
+# Pygame library initiation
 pygame.init()
 scr = pygame.display.set_mode((1280, 720), pygame.FULLSCREEN)
-#scr = pygame.display.set_mode((1280, 720))
 pygame.display.set_caption('Basketbal Clock')
+pygame.mouse.set_visible(0)
 fontScore = pygame.font.Font('fonts/LED.ttf', 200)
 fontScoreSmall = pygame.font.Font('fonts/LED.ttf', 90)
-fontLabel = pygame.font.Font(
-    'fonts/DejaVuSans-Bold.ttf', 80)
-fontLabelSmall = pygame.font.Font(
-    'fonts/DejaVuSans-Bold.ttf', 40)
-LogoClub = pygame.image.load('image/hageland.png')
+fontLabel = pygame.font.Font('fonts/DejaVuSans-Bold.ttf', 80)
+fontLabelSmall = pygame.font.Font('fonts/DejaVuSans-Bold.ttf', 40)
+LogoClub = pygame.image.load('image/logo.png')
 Manual = pygame.image.load('image/handleidingScoreboard.png')
 textLabelHome = fontLabel.render('HOME', True, (100, 100, 100), (0, 0, 0))
-textLabelAway = fontLabel.render('VISITOR', True, (100, 100, 100), (0, 0, 0))
+textLabelAway = fontLabel.render('AWAY', True, (100, 100, 100), (0, 0, 0))
 textLabelFouls = fontLabel.render('FOULS', True, (100, 100, 100), (0, 0, 0))
 textLabelPeriod = fontLabel.render('P', True, (100, 100, 100), (0, 0, 0))
 TimeOutText = ("", "*", "**")
 PauzeCounterString = ""
-
-color = (100, 255, 255)
-
-#All variables required for the clock
+cyan = (100, 255, 255)
+red = (255, 0, 0)
+# All variables required for the clock
 startTime = time.time()
 ResetCounter = 600
-# startcounter is reset to remaining time when clock is stopped
+# Startcounter is reset to remaining time when clock is stopped
 StartCounter = ResetCounter
 RemainingTime = ResetCounter
 ClockPauze = True  # check if the clock is active
 ScoreHome = 0
 ScoreAway = 0
-FoolsHome = 0
-FoolsAway = 0
+FoulsHome = 0
+FoulsAway = 0
 Period = 1
 EndSound = pygame.mixer.Sound('sounds/BUZZER.WAV')
 EndSoundPlayed = False  # required to only play 1 time
-
 TimeOut = 60
 TimeOutRunning = False
 TimeOutHome = 0
 TimeOutAway = 0
 TimeOutRemaining = 0
 StartupScreen = True  # allow configuration
-ResetCounterOptions = (600, 540, 480, 420, 360, 300, 240, 180, 120, 60)
-TimerChoice = 0  # to allow selection of the Timer
+ResetCounterOptions = (720, 660, 600, 540, 480, 420, 360, 300, 240, 180, 120, 60)
+TimerChoice = 2  # to allow selection of the Timer - default = 10 min
 PauzeCounter = 0
-
 time.sleep(15)
 
 #function for the changing digits
 def ScoreBoardUpdate(ScoreHome, ScoreAway, FoulsHome, FoulsAway, Clock, Period, TimeOutRemaining, PauzeCounterString):
     global textLabelHome, textLabelAway, textLabelFouls, textLabelPeriod
 
-    textScoreHome = fontScore.render(
-        str(ScoreHome), True, (255, 255, 0), (0, 0, 0))
-    textScoreAway = fontScore.render(
-        str(ScoreAway), True, (255, 255, 0), (0, 0, 0))
+    textScoreHome = fontScore.render(str(ScoreHome), True, (255, 255, 0), (0, 0, 0))
+    textScoreAway = fontScore.render(str(ScoreAway), True, (255, 255, 0), (0, 0, 0))
     textClock = fontScore.render(str(Clock), True, (255, 0, 0), (0, 0, 0))
-
-    # Put the fools in red if 4 to indicate free shots
-    if FoolsHome < 4:
-        textFoulsHome = fontScore.render(
-            str(FoulsHome), True, (255, 255, 0), (0, 0, 0))
+    # Put the fouls in red if 4 to indicate free shots
+    if FoulsHome < 4:
+        textFoulsHome = fontScore.render(str(FoulsHome), True, (255, 255, 0), (0, 0, 0))
     else:
-        textFoulsHome = fontScore.render(
-            str(FoulsHome), True, (255, 0, 0), (0, 0, 0))
-    if FoolsAway < 4:
-        textFoulsAway = fontScore.render(
-            str(FoulsAway), True, (255, 255, 0), (0, 0, 0))
+        textFoulsHome = fontScore.render(str(FoulsHome), True, (255, 0, 0), (0, 0, 0))
+    if FoulsAway < 4:
+        textFoulsAway = fontScore.render(str(FoulsAway), True, (255, 255, 0), (0, 0, 0))
     else:
-        textFoulsAway = fontScore.render(
-            str(FoulsAway), True, (255, 0, 0), (0, 0, 0))
-
-    textTimeOut = fontScore.render(
-        str(TimeOutRemaining), True, (255, 255, 0), (0, 0, 0))
-
+        textFoulsAway = fontScore.render(str(FoulsAway), True, (255, 0, 0), (0, 0, 0))
+    textTimeOut = fontScore.render(str(TimeOutRemaining), True, (255, 255, 0), (0, 0, 0))
     textPauzeCounter = fontScore.render(str(PauzeCounterString), True, (255, 255, 0), (0, 0, 0))
     textPeriod = fontScoreSmall.render(str(Period), True, (255, 255, 0), (0, 0, 0))
+    textTimeOutHome = fontScore.render(TimeOutText[TimeOutHome], True, (255, 255, 0), (0, 0, 0))
+    textTimeOutAway = fontScore.render(TimeOutText[TimeOutAway], True, (255, 255, 0), (0, 0, 0))
 
-    textTimeOutHome = fontScore.render(
-        TimeOutText[TimeOutHome], True, (255, 255, 0), (0, 0, 0))
-    textTimeOutAway = fontScore.render(
-        TimeOutText[TimeOutAway], True, (255, 255, 0), (0, 0, 0))
-
-#Fixed text
+# Fixed text
     textRectLabelHome = textLabelHome.get_rect(center=(200, 50))
     textRectLabelAway = textLabelAway.get_rect(center=(1080, 50))
     textRectFoulsLabelHome = textLabelFouls.get_rect(center=(200, 480))
     textRectFoulsLabelAway = textLabelFouls.get_rect(center=(1080, 480))
     textRectLabelPeriod = textLabelPeriod.get_rect(center=(600, 50))
 
-#Variable text
+# Variable text
     textRectScoreHome = textScoreHome.get_rect(center=(200, 200))
     textRectScoreAway = textScoreAway.get_rect(center=(1080, 200))
     textRectClock = textClock.get_rect(center=(640, 200))
@@ -132,15 +114,15 @@ def ScoreBoardUpdate(ScoreHome, ScoreAway, FoulsHome, FoulsAway, Clock, Period, 
     scr.blit(textPeriod, textRectPeriod)
     scr.blit(textTimeOutHome, textRectTimeOutHome)
     scr.blit(textTimeOutAway, textRectTimeOutAway)
-    scr.blit(LogoClub, (390, 350))
+    scr.blit(LogoClub, (390, 330))
 
-    pygame.draw.rect(scr, color, pygame.Rect(50, 120, 300, 200), 5)
-    pygame.draw.rect(scr, color, pygame.Rect(930, 120, 300, 200), 5)
+    pygame.draw.rect(scr, cyan, (50, 110, 300, 200), 5)
+    pygame.draw.rect(scr, cyan, (930, 110, 300, 200), 5)
     pygame.display.flip()
 
 #take actions depending on the feedback from any channel (keyboard, IO or network)
 def HandleFeedback(keystroke):
-    global ClockPauze, TimeOutRunning, TimeOutRemaining, ScoreHome, FoolsHome, ScoreAway, FoolsAway, Period, TimeOutHome, TimeOutAway, TimeOutStart, RemainingTime, ResetCounter, TimerChoice, ResetCounterOptions, StartupScreen
+    global ClockPauze, TimeOutRunning, TimeOutRemaining, ScoreHome, FoulsHome, ScoreAway, FoulsAway, Period, TimeOutHome, TimeOutAway, TimeOutStart, RemainingTime, ResetCounter, TimerChoice, ResetCounterOptions, StartupScreen
 
     if keystroke == "StartStop":
         if StartupScreen:
@@ -159,21 +141,21 @@ def HandleFeedback(keystroke):
         if not(StartupScreen):
             ScoreHome -= 1
     if keystroke == "FoulHome+":
-        FoolsHome += 1
+        FoulsHome += 1
     if keystroke == "FoulHome-":
-        FoolsHome -= 1
+        FoulsHome -= 1
     if keystroke == "ScoreAway+":
         ScoreAway += 1
     if keystroke == "ScoreAway-":
         ScoreAway -= 1
     if keystroke == "FoulAway+":
-        FoolsAway += 1
+        FoulsAway += 1
     if keystroke == "FoulAway-":
-        FoolsAway -= 1
+        FoulsAway -= 1
     if keystroke == "Periode+":
         Period += 1
-        FoolsHome = 0
-        FoolsAway = 0
+        FoulsHome = 0
+        FoulsAway = 0
         if Period > 2:
             TimeOutHome, TimeOutAway = 0, 0
     if keystroke == "Periode-":
@@ -195,7 +177,7 @@ def HandleFeedback(keystroke):
             RemainingTime = ResetCounter
             EndSoundPlayed = False
 
-#get keyboard inputs
+# Get keyboard inputs
 def GetKeyboardInput():
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -210,40 +192,40 @@ def GetKeyboardInput():
             if event.key == pygame.K_SPACE:
                 keystroke = "StartStop"
                 return keystroke
-            if event.key == pygame.K_q:
+            if event.key == pygame.K_s:
                 keystroke = "ScoreHome+"
                 return keystroke
-            if event.key == pygame.K_w:
+            if event.key == pygame.K_x:
                 keystroke = "ScoreHome-"
                 return keystroke
-            if event.key == pygame.K_s:
+            if event.key == pygame.K_d:
                 keystroke = "FoulHome+"
                 return keystroke
-            if event.key == pygame.K_x:
+            if event.key == pygame.K_c:
                 keystroke = "FoulHome-"
                 return keystroke
-            if event.key == pygame.K_m:
+            if event.key == pygame.K_j:
                 keystroke = "ScoreAway+"
                 return keystroke
-            if event.key == pygame.K_COLON:
+            if event.key == pygame.K_n:
                 keystroke = "ScoreAway-"
                 return keystroke
-            if event.key == pygame.K_l:
+            if event.key == pygame.K_h:
                 keystroke = "FoulAway+"
                 return keystroke
-            if event.key == pygame.K_SEMICOLON:
+            if event.key == pygame.K_b:
                 keystroke = "FoulAway-"
                 return keystroke
-            if event.key == pygame.K_u:
+            if event.key == pygame.K_y:
                 keystroke = "Periode+"
                 return keystroke
             if event.key == pygame.K_r:
                 keystroke = "Periode-"
                 return keystroke
-            if event.key == pygame.K_a:
+            if event.key == pygame.K_e:
                 keystroke = "TimeOutHome"
                 return keystroke
-            if event.key == pygame.K_p:
+            if event.key == pygame.K_u:
                 keystroke = "TimeOutAway"
                 return keystroke
             if event.key == pygame.K_t:
@@ -256,7 +238,7 @@ def GetNetworkInput():
     serv.listen(5)
     while True:
         clientsocket, clientAddress = serv.accept()
-        #dual threading
+        # Dual threading
         dualthread = threading.Thread(target=handle_client, args=(clientsocket, clientAddress))
         dualthread.start()
 
@@ -274,11 +256,9 @@ def ConfigScreen():
     if StartupScreen:
         ResetCounter = ResetCounterOptions[TimerChoice]
         RemainingTime = ResetCounter
-        textSetCounter = fontLabelSmall.render(
-            'Duration Period (use HomeScore Up/Down + Clockstop)', True, (100, 100, 100), (0, 0, 0))
+        textSetCounter = fontLabelSmall.render('Duration Period (use HomeScore Up/Down + Clockstop)', True, (100, 100, 100), (0, 0, 0))
         textRecSetCounter = textSetCounter.get_rect(center=(640, 50))
-        textResetCounter = fontScore.render(
-            str(int(ResetCounter/60)), True, (255, 255, 100), (0, 0, 0))
+        textResetCounter = fontScore.render(str(int(ResetCounter/60)), True, (255, 255, 100), (0, 0, 0))
         textRecResetCounter = textResetCounter.get_rect(center=(640, 150))
         scr.fill((0, 0, 0))
         scr.blit(textSetCounter, textRecSetCounter)
@@ -286,51 +266,45 @@ def ConfigScreen():
         scr.blit(Manual, (250, 280))
         pygame.display.flip()
 
-# start the network threat to get socket commands
+# Start the network threat to get socket commands
 newthread = threading.Thread(target=GetNetworkInput)
 newthread.start()
 
-#The actual program
+# The actual program
 running = True
 keystroke = ""
 while running:
     if StartupScreen:
         ConfigScreen()
 
-#Handle feedback from keyboard
+# Handle feedback from keyboard
     HandleFeedback(GetKeyboardInput())
-    #ReadOutKeyboard()
-#Handle feedback from network
+# Handle feedback from network
     HandleFeedback(keystroke)
     keystroke = ""
 
-#Start/Stop of the clock and count down
+# Start/Stop of the clock and count down
     if ClockPauze:
         StartCounter = RemainingTime
         startTime = time.time()
     else:
         RemainingTime = StartCounter - round(time.time()-startTime)
-
     if RemainingTime == 0:
         ClockPauze = True
         #Counter that will count up to show pauze time
-        PauzeCounterUp = round(time.time()-PauzeCounter) 
+        PauzeCounterUp = round(time.time()-PauzeCounter)
         PauzeCounterMin = math.floor(PauzeCounterUp/60)
         PauzeCounterSec = PauzeCounterUp - PauzeCounterMin*60
-        PauzeCounterString = str(int(PauzeCounterMin)) + \
-        " : " + str(int(PauzeCounterSec))            
-            
+        PauzeCounterString = str(int(PauzeCounterMin)).zfill(2) + ":" + str(int(PauzeCounterSec)).zfill(2)
         if not(EndSoundPlayed):
             EndSoundPlayed = True
             EndSound.play()
     else:
         PauzeCounter = time.time()
         PauzeCounterString = ""
-        
     RemainingMin = math.floor(RemainingTime/60)
     RemainingSec = RemainingTime - RemainingMin*60
-    RemainingString = str(int(RemainingMin)) + \
-        " : " + str(int(RemainingSec))
+    RemainingString = str(int(RemainingMin)).zfill(2) + ":" + str(int(RemainingSec)).zfill(2)
 
 #TimeOut token
     if TimeOutRunning:
@@ -341,9 +315,7 @@ while running:
             TimeOutRemaining = TimeOut - int(round(time.time()-TimeOutStart))
             if TimeOutRemaining == 10:
                 EndSound.play()
-
     if not(StartupScreen):
-        ScoreBoardUpdate(ScoreHome, ScoreAway, FoolsHome,
-                         FoolsAway, RemainingString, Period, TimeOutRemaining, PauzeCounterString)
+        ScoreBoardUpdate(ScoreHome, ScoreAway, FoulsHome, FoulsAway, RemainingString, Period, TimeOutRemaining, PauzeCounterString)
 
 newthread.stop()

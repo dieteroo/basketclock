@@ -1,0 +1,25 @@
+#!/bin/bash
+
+## Create basketclock.service
+cat <<EOF >basketclock.service
+[Unit]
+Description=basketclock autostart
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/basketclock/basketclockthread.py
+Restart=on-success
+User=_USER_
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+## Alter the run-as username to the current logged in user
+your_USER=$(users)
+sudo sed -i "s/_USER_/$your_USER/g" basketclock.service
+
+## Move and enable basketclock.service
+sudo mv basketclock.service /etc/systemd/system
+sudo systemctl daemon-reload
+sudo systemctl enable basketclock.service
+sudo systemctl start basketclock.service

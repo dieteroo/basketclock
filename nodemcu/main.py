@@ -36,7 +36,7 @@ keypushed = ""
 
 # Key mapping of the keyboard matrix
 Matrix = [["TimeOutHome","Periode-","RestartTimer","Periode+","TimeOutAway"],
-          ["FoulHome-","FoulHome+","Nothing","FoulAway-","FoulAway+"],
+          ["FoulHome-","FoulHome+","Possession","FoulAway-","FoulAway+"],
           ["ScoreHome-","ScoreHome+","StartStop","ScoreAway-","ScoreAway+"]]
 
 print('Starting connection to server 10.3.141.1:8080')

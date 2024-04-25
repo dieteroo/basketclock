@@ -43,6 +43,7 @@ ScoreAway = 0
 FoulsHome = 0
 FoulsAway = 0
 Period = 1
+Possession = 0
 EndSound = pygame.mixer.Sound('sounds/BUZZER.WAV')
 EndSoundPlayed = False  # required to only play 1 time
 # Buzzer - Connect your piezobuzzer to ground and GPIO pin16
@@ -63,7 +64,7 @@ PauzeCounter = 0
 time.sleep(15)
 
 #function for the changing digits
-def ScoreBoardUpdate(ScoreHome, ScoreAway, FoulsHome, FoulsAway, Clock, Period, TimeOutRemaining, PauzeCounterString):
+def ScoreBoardUpdate(ScoreHome, ScoreAway, FoulsHome, FoulsAway, Clock, Period, TimeOutRemaining, PauzeCounterString, Possession):
     global textLabelHome, textLabelAway, textLabelFouls, textLabelPeriod
 
     textScoreHome = fontScore.render(str(ScoreHome), True, (255, 255, 0), (0, 0, 0))
@@ -122,14 +123,19 @@ def ScoreBoardUpdate(ScoreHome, ScoreAway, FoulsHome, FoulsAway, Clock, Period, 
     scr.blit(textTimeOutHome, textRectTimeOutHome)
     scr.blit(textTimeOutAway, textRectTimeOutAway)
     scr.blit(LogoClub, (390, 330))
-
+    if Possession == 1:
+        pygame.draw.rect(scr, red, (420, 40, 50, 10))
+        pygame.draw.polygon(scr, red, [(390, 45), (420, 75), (420, 15)])
+    if Possession == 2:
+        pygame.draw.rect(scr, red, (810, 40, 50, 10))
+        pygame.draw.polygon(scr, red, [(890,45),(860,75),(860,15)])
     pygame.draw.rect(scr, cyan, (50, 110, 300, 200), 5)
     pygame.draw.rect(scr, cyan, (930, 110, 300, 200), 5)
     pygame.display.flip()
 
-#take actions depending on the feedback from any channel (keyboard, IO or network)
+# Take actions depending on the feedback from any channel (keyboard, IO or network)
 def HandleFeedback(keystroke):
-    global ClockPauze, TimeOutRunning, TimeOutRemaining, ScoreHome, FoulsHome, ScoreAway, FoulsAway, Period, TimeOutHome, TimeOutAway, TimeOutStart, RemainingTime, ResetCounter, TimerChoice, ResetCounterOptions, StartupScreen
+    global ClockPauze, TimeOutRunning, TimeOutRemaining, ScoreHome, FoulsHome, ScoreAway, FoulsAway, Period, TimeOutHome, TimeOutAway, TimeOutStart, RemainingTime, ResetCounter, TimerChoice, ResetCounterOptions, StartupScreen, Possession
 
     if keystroke == "StartStop":
         if StartupScreen:
@@ -159,7 +165,12 @@ def HandleFeedback(keystroke):
         FoulsAway += 1
     if keystroke == "FoulAway-":
         FoulsAway -= 1
+    if keystroke == "Possession":
+        if Possession == 0:
+            Possession = 2
+        Possession = 3 - Possession
     if keystroke == "Periode+":
+        # Possession = 3 - Possession
         Period += 1
         FoulsHome = 0
         FoulsAway = 0
@@ -222,6 +233,9 @@ def GetKeyboardInput():
                 return keystroke
             if event.key == pygame.K_b:
                 keystroke = "FoulAway-"
+                return keystroke
+            if event.key == pygame.K_v:
+                keystroke = "Possession"
                 return keystroke
             if event.key == pygame.K_y:
                 keystroke = "Periode+"
@@ -314,7 +328,7 @@ while running:
     RemainingSec = RemainingTime - RemainingMin*60
     RemainingString = str(int(RemainingMin)).zfill(2) + ":" + str(int(RemainingSec)).zfill(2)
 
-#TimeOut token
+# TimeOut token
     if TimeOutRunning:
         if TimeOutRemaining <= 0:
             TimeOutRunning = False
@@ -326,6 +340,6 @@ while running:
                 EndSound.play()
                 PiezoBuzzer()
     if not(StartupScreen):
-        ScoreBoardUpdate(ScoreHome, ScoreAway, FoulsHome, FoulsAway, RemainingString, Period, TimeOutRemaining, PauzeCounterString)
+        ScoreBoardUpdate(ScoreHome, ScoreAway, FoulsHome, FoulsAway, RemainingString, Period, TimeOutRemaining, PauzeCounterString, Possession)
 
 newthread.stop()

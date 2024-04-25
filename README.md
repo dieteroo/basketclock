@@ -14,6 +14,7 @@ The supported features are:
 - Score home/guest
 - TimeOut home/guest
 - Period
+- Possession
 
 ## What is required?
 The basketball scoreboard with clock can be controlled with a wireless keyboard or via a WiFi network.
@@ -22,7 +23,7 @@ The basketball scoreboard with clock can be controlled with a wireless keyboard 
 * WiFi control + Keyboard control
   * Raspberry PI
   * Micropython micro controller
-  * Box + 14 buttons for the controls
+  * Box + 15 buttons for the controls
 
 ![Scoreboard](/photo/startscreen.jpg)
 
@@ -39,7 +40,7 @@ The button matrix to be build is 3 horizontal wires and 5 vertical wires followi
  Matrix      | Vertical 1 | Vertical 2 | Vertical 3 | Vertical 4 | Vertical 5
  ------      | ---------- | ---------- | ---------- | -----------| ----------
 Horizontal 1 | TimeOutHome | Periode- | RestartTimer | Periode+ | TimeOutAway
-Horizontal 2 | FoulHome- | FoulHome+ | Nothing  | FoulAway- | FoulAway+"
+Horizontal 2 | FoulHome- | FoulHome+ | Possession  | FoulAway- | FoulAway+"
 Horizontal 3 | ScoreHome- | ScoreHome+ | StartStop | ScoreAway- | ScoreAway+
 
 ### Pycom

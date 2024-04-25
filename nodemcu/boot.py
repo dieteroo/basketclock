@@ -1,7 +1,16 @@
 import machine
+from machine import Pin, PWM
 import network
 import time
 import uos
+
+# Set rgb led pins (red / ground - longest pin / green / blue - shortest pin)
+frequency = 5000
+# Pin initialization (starts 4th pin on the right bottomside usb)
+blue = PWM(Pin(2), frequency)
+red = PWM(Pin(4), frequency)
+green = PWM(Pin(16), frequency)
+# info: # ground = machine.Pin(GND)
 
 # Wi-Fi configuration
 wlan = network.WLAN(network.STA_IF)  # create station interface
@@ -18,7 +27,13 @@ if not wlan.isconnected():
     wlan.connect('_wlan_SSID_', '_wlan_PASS_')
 
     while not wlan.isconnected():
+        blue.duty(0)
+        red.duty(256)
+        green.duty(0)
         time.sleep_ms(100)  # wait for connection
         print ('... ')
 
 print('Connected to Wi-Fi:', wlan.ifconfig())
+blue.duty(0)
+red.duty(256)
+green.duty(0)

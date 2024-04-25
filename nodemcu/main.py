@@ -1,8 +1,21 @@
 import machine
+from machine import Pin, PWM
 import network
 import time
 from time import sleep
 import usocket
+
+# Set rgb led pins (red / ground - longest pin / green / blue - shortest pin)
+frequency = 5000
+# Pin initialization (starts 4th pin on the right bottomside usb)
+blue = PWM(Pin(2), frequency)
+red = PWM(Pin(4), frequency)
+green = PWM(Pin(16), frequency)
+# info: # ground = machine.Pin(GND)
+
+blue.duty(256)
+red.duty(0)
+green.duty(0)
 
 print('Starting Pin Input initialization')
 # Pin initialization (starts 3th pin left below - side usb)
@@ -38,6 +51,9 @@ except OSError as e:
 print('Connection established')
 
 while True:
+    blue.duty(0)
+    red.duty(0)
+    green.duty(256)
     # Test all buttons
     Output1.value(0)
     if Input1.value() == 0:
@@ -79,6 +95,8 @@ while True:
     Output3.value(1)
 
     if keypushed:
+        green.duty(0)
+        blue.duty(256)
         print("Pressed key:", keypushed)
         try: 
             client.send(keypushed.encode())
@@ -86,5 +104,7 @@ while True:
             client.close()
         keypushed = ""
         time.sleep(0.3)
+        blue.duty(0)
+        green.duty(256)
 
 client.close()

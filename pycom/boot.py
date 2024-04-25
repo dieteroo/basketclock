@@ -17,6 +17,6 @@ if machine.reset_cause() != machine.SOFT_RESET:
 
 if not wlan.isconnected():
     # change the line below to match your network ssid, security and password
-    wlan.connect('HagelandUnitedScoreBoard', auth=(WLAN.WPA2, 'Boutersem1'), timeout=5000)
+    wlan.connect('_wifi_SSID_', auth=(WLAN.WPA2, '_wifi_PASS_'), timeout=5000)
     while not wlan.isconnected():
         machine.idle() # save power while waiting

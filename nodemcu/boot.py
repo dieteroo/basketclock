@@ -6,10 +6,10 @@ import uos
 
 # Set rgb led pins (red / ground - longest pin / green / blue - shortest pin)
 frequency = 5000
-# Pin initialization (starts 4th pin on the right bottomside usb)
+# Pin initialization (starts 3rd pin on the right bottomside usb)
+green = PWM(Pin(15), frequency)
 blue = PWM(Pin(2), frequency)
 red = PWM(Pin(4), frequency)
-green = PWM(Pin(16), frequency)
 # info: # ground = machine.Pin(GND)
 
 # Wi-Fi configuration

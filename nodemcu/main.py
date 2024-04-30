@@ -8,9 +8,9 @@ import usocket
 # Set rgb led pins (red / ground - longest pin / green / blue - shortest pin)
 frequency = 5000
 # Pin initialization (starts 3rd pin on the right bottomside usb)
-green = PWM(Pin(15), frequency)
-blue = PWM(Pin(2), frequency)
-red = PWM(Pin(4), frequency)
+red = PWM(Pin(15), frequency)
+green = PWM(Pin(2), frequency)
+blue = PWM(Pin(4), frequency)
 # info: # ground = machine.Pin(GND)
 
 blue.duty(256)

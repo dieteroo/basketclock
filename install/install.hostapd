@@ -10,13 +10,13 @@
   echo -n "Please provide a WiFi Channel (1 - 6 - 13): "
   read your_CHANNEL < /dev/tty
 
-sudo cat <<EOF >>/etc/dhcpcd.conf
+sudo bash -c 'cat <<EOF >>/etc/dhcpcd.conf
 denyinterfaces wlan0
-EOF
+EOF'
 
 sudo systemctl restart dhcpcd
 
-sudo cat <<EOF >>/etc/network/interfaces
+sudo bash -c 'cat <<EOF >>/etc/network/interfaces
 auto lo
 iface lo inet loopback
 
@@ -29,13 +29,13 @@ iface wlan0 inet static
     netmask 255.255.255.0
     network 10.3.141.0
     broadcast 10.3.141.255
-EOF
+EOF'
 
 sudo ifdown wlan0 && sudo ifup wlan0
 
 sudo apt-get install hostapd -y
 
-cat <<EOF >hostapd.conf
+sudo bash -c 'cat <<EOF >hostapd.conf
 interface=wlan0
 #If this fails, try rt1871xdrv a 
 driver=nl80211
@@ -54,7 +54,7 @@ wpa_passphrase=_wifi_PASS_
 wpa_key_mgmt=WPA-PSK
 wpa_pairwise=TKIP
 rsn_pairwise=CCMP
-EOF
+EOF'
 
 sudo mv hostapd.conf /etc/hostapd/hostapd.conf
 

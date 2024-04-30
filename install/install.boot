@@ -1,5 +1,6 @@
 #!/bin/bash
 
+sudo raspi-config nonint enable_overlayfs
 ## Enable Boot Read-Only
 sudo raspi-config nonint enable_bootro
 

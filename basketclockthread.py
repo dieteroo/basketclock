@@ -1,4 +1,4 @@
-import pygame
+import pygame # type: ignore
 import sys
 import time
 import math
@@ -6,7 +6,7 @@ import os
 from time import sleep
 import socket
 import threading
-from gpiozero import Buzzer
+from gpiozero import Buzzer # type: ignore
 
 # Set the default path to the python directory
 sourceFileDir = os.path.dirname(os.path.abspath(__file__))
@@ -27,7 +27,7 @@ textLabelHome = fontLabel.render('HOME', True, (100, 100, 100), (0, 0, 0))
 textLabelAway = fontLabel.render('AWAY', True, (100, 100, 100), (0, 0, 0))
 textLabelFouls = fontLabel.render('FOULS', True, (100, 100, 100), (0, 0, 0))
 textLabelPeriod = fontLabel.render('P', True, (100, 100, 100), (0, 0, 0))
-TimeOutText = ("", "*", "**")
+TimeOutText = ("", "*", "**", "***")
 PauzeCounterString = ""
 cyan = (100, 255, 255)
 red = (255, 0, 0)
@@ -57,6 +57,7 @@ TimeOutRunning = False
 TimeOutHome = 0
 TimeOutAway = 0
 TimeOutRemaining = 0
+Extra = "E"
 StartupScreen = True  # allow configuration
 ResetCounterOptions = (720, 660, 600, 540, 480, 420, 360, 300, 240, 180, 120, 60)
 TimerChoice = 2  # to allow selection of the Timer - default = 10 min
@@ -81,7 +82,11 @@ def ScoreBoardUpdate(ScoreHome, ScoreAway, FoulsHome, FoulsAway, Clock, Period, 
         textFoulsAway = fontScore.render(str(FoulsAway), True, (255, 0, 0), (0, 0, 0))
     textTimeOut = fontScore.render(str(TimeOutRemaining), True, (255, 255, 0), (0, 0, 0))
     textPauzeCounter = fontScore.render(str(PauzeCounterString), True, (255, 255, 0), (0, 0, 0))
-    textPeriod = fontScoreSmall.render(str(Period), True, (255, 255, 0), (0, 0, 0))
+    # Put an "E" to indicate overtime
+    if Period >= 5:
+        textPeriod = fontScoreSmall.render(str(Extra), True, (255, 255, 0), (0, 0, 0))
+    else:
+        textPeriod = fontScoreSmall.render(str(Period), True, (255, 255, 0), (0, 0, 0))
     textTimeOutHome = fontScore.render(TimeOutText[TimeOutHome], True, (255, 255, 0), (0, 0, 0))
     textTimeOutAway = fontScore.render(TimeOutText[TimeOutAway], True, (255, 255, 0), (0, 0, 0))
 
@@ -172,24 +177,50 @@ def HandleFeedback(keystroke):
     if keystroke == "Periode+":
         # Possession = 3 - Possession
         Period += 1
-        FoulsHome = 0
-        FoulsAway = 0
-        if Period > 2:
+        if Period <= 4:
+            FoulsHome = 0
+            FoulsAway = 0
+        if Period == 3 or Period >= 5:
             TimeOutHome, TimeOutAway = 0, 0
+        if Period == 5:
+            ResetCounter = ResetCounterOptions[TimerChoice]
+            ResetCounter = ResetCounter / 2
     if keystroke == "Periode-":
         Period -= 1
     if keystroke == "TimeOutHome":
         if ClockPauze and not(TimeOutRunning) and not(StartupScreen):
-            TimeOutHome += 1
-            TimeOutRemaining = TimeOut
-            TimeOutStart = time.time()
-            TimeOutRunning = True
+            if Period <= 2 and TimeOutHome < 2:
+                TimeOutHome += 1
+                TimeOutRemaining = TimeOut
+                TimeOutStart = time.time()
+                TimeOutRunning = True
+            if Period > 2 and Period <= 4 and TimeOutHome < 3:
+                TimeOutHome += 1
+                TimeOutRemaining = TimeOut
+                TimeOutStart = time.time()
+                TimeOutRunning = True
+            if Period > 4 and TimeOutHome == 0:
+                TimeOutHome += 1
+                TimeOutRemaining = TimeOut
+                TimeOutStart = time.time()
+                TimeOutRunning = True
     if keystroke == "TimeOutAway":
         if ClockPauze and not(TimeOutRunning) and not(StartupScreen):
-            TimeOutAway += 1
-            TimeOutRemaining = TimeOut
-            TimeOutStart = time.time()
-            TimeOutRunning = True
+            if Period <= 2 and TimeOutAway < 2:
+                TimeOutAway += 1
+                TimeOutRemaining = TimeOut
+                TimeOutStart = time.time()
+                TimeOutRunning = True
+            if Period > 2 and Period <= 4 and TimeOutAway < 3:
+                TimeOutAway += 1
+                TimeOutRemaining = TimeOut
+                TimeOutStart = time.time()
+                TimeOutRunning = True
+            if Period > 4 and TimeOutAway == 0:
+                TimeOutAway += 1
+                TimeOutRemaining = TimeOut
+                TimeOutStart = time.time()
+                TimeOutRunning = True
     if keystroke == "RestartTimer":
         if ClockPauze:
             RemainingTime = ResetCounter

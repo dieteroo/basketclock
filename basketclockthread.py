@@ -255,6 +255,7 @@ def GetKeyboardInput():
 
 def GetNetworkInput():
     serv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    serv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     serv.bind(('10.3.141.1', 8080))
     serv.listen(5)
     while True:

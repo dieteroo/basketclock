@@ -31,7 +31,7 @@ The basketball scoreboard with clock can be controlled with a wireless keyboard 
 
 ## Howto build this project
 ### Raspberry
-[Installation manual](install/install.md)
+[Installation manual](install/INSTALL.md)
   
 ### Remote keyboard
 The Remote keyboard is based upon a button matrix of 3x5.  The micropython device will scan this matrix and use a network socket to send the button pressed, to the Raspbian. Note that the Raspbian handles the button pushed in the same way as a command from the keyboard.

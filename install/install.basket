@@ -26,7 +26,8 @@ sudo curl $URL/sounds/BUZZER.WAV -o /opt/basketclock/sounds/BUZZER.WAV
 
 ## Install pygame
 sudo apt install python3-pip -y
-python3 -m pip install pygame --break-system-packages
+PIP_BREAK_SYSTEM_PACKAGES=1
+python3 -m pip install pygame
 
 ## Install dependencies
 sudo apt install libsdl2-2.0-0 libsdl2-ttf-2.0-0 libsdl2-mixer-2.0-0 libsdl2-image-2.0-0 -y

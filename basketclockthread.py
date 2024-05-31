@@ -1,4 +1,5 @@
 import pygame # type: ignore
+import pygame # type: ignore
 import sys
 import time
 import math
@@ -6,6 +7,7 @@ import os
 from time import sleep
 import socket
 import threading
+from gpiozero import Buzzer # type: ignore
 from gpiozero import Buzzer # type: ignore
 
 # Set the default path to the python directory
@@ -17,20 +19,32 @@ pygame.init()
 scr = pygame.display.set_mode((1280, 720), pygame.FULLSCREEN)
 pygame.display.set_caption('Basketbal Clock')
 pygame.mouse.set_visible(0)
+
+# Fonts
 fontScore = pygame.font.Font('fonts/LED.ttf', 200)
 fontScoreSmall = pygame.font.Font('fonts/LED.ttf', 90)
 fontLabel = pygame.font.Font('fonts/DejaVuSans-Bold.ttf', 80)
 fontLabelSmall = pygame.font.Font('fonts/DejaVuSans-Bold.ttf', 40)
+
+# Images
 LogoClub = pygame.image.load('image/logo.png')
 Manual = pygame.image.load('image/handleidingScoreboard.png')
-textLabelHome = fontLabel.render('HOME', True, (100, 100, 100), (0, 0, 0))
-textLabelAway = fontLabel.render('AWAY', True, (100, 100, 100), (0, 0, 0))
-textLabelFouls = fontLabel.render('FOULS', True, (100, 100, 100), (0, 0, 0))
-textLabelPeriod = fontLabel.render('P', True, (100, 100, 100), (0, 0, 0))
-TimeOutText = ("", "*", "**", "***")
-PauzeCounterString = ""
+
+# Colors
 cyan = (100, 255, 255)
 red = (255, 0, 0)
+yellow = (255, 255, 0)
+grey = (100, 100, 100)
+black = (0, 0, 0)
+
+# Text
+textLabelHome = fontLabel.render('HOME', True, grey, black)
+textLabelAway = fontLabel.render('AWAY', True, grey, black)
+textLabelFouls = fontLabel.render('FOULS', True, grey, black)
+textLabelPeriod = fontLabel.render('P', True, grey, black)
+TimeOutText = ("", "*", "**", "***")
+PauzeCounterString = ""
+
 # All variables required for the clock
 startTime = time.time()
 ResetCounter = 600
@@ -58,37 +72,38 @@ TimeOutHome = 0
 TimeOutAway = 0
 TimeOutRemaining = 0
 Extra = "E"
+Extra = "E"
 StartupScreen = True  # allow configuration
 ResetCounterOptions = (720, 660, 600, 540, 480, 420, 360, 300, 240, 180, 120, 60)
 TimerChoice = 2  # to allow selection of the Timer - default = 10 min
 PauzeCounter = 0
 time.sleep(15)
 
-#function for the changing digits
+# Function for the changing digits
 def ScoreBoardUpdate(ScoreHome, ScoreAway, FoulsHome, FoulsAway, Clock, Period, TimeOutRemaining, PauzeCounterString, Possession):
     global textLabelHome, textLabelAway, textLabelFouls, textLabelPeriod
 
-    textScoreHome = fontScore.render(str(ScoreHome), True, (255, 255, 0), (0, 0, 0))
-    textScoreAway = fontScore.render(str(ScoreAway), True, (255, 255, 0), (0, 0, 0))
-    textClock = fontScore.render(str(Clock), True, (255, 0, 0), (0, 0, 0))
+    textScoreHome = fontScore.render(str(ScoreHome), True, yellow, black)
+    textScoreAway = fontScore.render(str(ScoreAway), True, yellow, black)
+    textClock = fontScore.render(str(Clock), True, red, black)
     # Put the fouls in red if 4 to indicate free shots
     if FoulsHome < 4:
-        textFoulsHome = fontScore.render(str(FoulsHome), True, (255, 255, 0), (0, 0, 0))
+        textFoulsHome = fontScore.render(str(FoulsHome), True, yellow, black)
     else:
-        textFoulsHome = fontScore.render(str(FoulsHome), True, (255, 0, 0), (0, 0, 0))
+        textFoulsHome = fontScore.render(str(FoulsHome), True, red, black)
     if FoulsAway < 4:
-        textFoulsAway = fontScore.render(str(FoulsAway), True, (255, 255, 0), (0, 0, 0))
+        textFoulsAway = fontScore.render(str(FoulsAway), True, yellow, black)
     else:
-        textFoulsAway = fontScore.render(str(FoulsAway), True, (255, 0, 0), (0, 0, 0))
-    textTimeOut = fontScore.render(str(TimeOutRemaining), True, (255, 255, 0), (0, 0, 0))
-    textPauzeCounter = fontScore.render(str(PauzeCounterString), True, (255, 255, 0), (0, 0, 0))
+        textFoulsAway = fontScore.render(str(FoulsAway), True, red, black)
+    textTimeOut = fontScore.render(str(TimeOutRemaining), True, yellow, black)
+    textPauzeCounter = fontScore.render(str(PauzeCounterString), True, yellow, black)
     # Put an "E" to indicate overtime
     if Period >= 5:
-        textPeriod = fontScoreSmall.render(str(Extra), True, (255, 255, 0), (0, 0, 0))
+        textPeriod = fontScoreSmall.render(str(Extra), True, yellow, black)
     else:
-        textPeriod = fontScoreSmall.render(str(Period), True, (255, 255, 0), (0, 0, 0))
-    textTimeOutHome = fontScore.render(TimeOutText[TimeOutHome], True, (255, 255, 0), (0, 0, 0))
-    textTimeOutAway = fontScore.render(TimeOutText[TimeOutAway], True, (255, 255, 0), (0, 0, 0))
+        textPeriod = fontScoreSmall.render(str(Period), True, yellow, black)
+    textTimeOutHome = fontScore.render(TimeOutText[TimeOutHome], True, yellow, black)
+    textTimeOutAway = fontScore.render(TimeOutText[TimeOutAway], True, yellow, black)
 
 # Fixed text
     textRectLabelHome = textLabelHome.get_rect(center=(200, 50))
@@ -109,7 +124,7 @@ def ScoreBoardUpdate(ScoreHome, ScoreAway, FoulsHome, FoulsAway, Clock, Period, 
     textRectTimeOutHome = textTimeOutHome.get_rect(center=(200, 350))
     textRectTimeOutAway = textTimeOutAway.get_rect(center=(1080, 350))
 
-    scr.fill((0, 0, 0))
+    scr.fill(black)
     scr.blit(textLabelHome, textRectLabelHome)
     scr.blit(textLabelAway, textRectLabelAway)
     scr.blit(textLabelFouls, textRectFoulsLabelHome)
@@ -181,7 +196,14 @@ def HandleFeedback(keystroke):
             FoulsHome = 0
             FoulsAway = 0
         if Period == 3 or Period >= 5:
+        if Period <= 4:
+            FoulsHome = 0
+            FoulsAway = 0
+        if Period == 3 or Period >= 5:
             TimeOutHome, TimeOutAway = 0, 0
+        if Period == 5:
+            ResetCounter = ResetCounterOptions[TimerChoice]
+            ResetCounter = ResetCounter / 2
         if Period == 5:
             ResetCounter = ResetCounterOptions[TimerChoice]
             ResetCounter = ResetCounter / 2
@@ -204,8 +226,38 @@ def HandleFeedback(keystroke):
                 TimeOutRemaining = TimeOut
                 TimeOutStart = time.time()
                 TimeOutRunning = True
+            if Period <= 2 and TimeOutHome < 2:
+                TimeOutHome += 1
+                TimeOutRemaining = TimeOut
+                TimeOutStart = time.time()
+                TimeOutRunning = True
+            if Period > 2 and Period <= 4 and TimeOutHome < 3:
+                TimeOutHome += 1
+                TimeOutRemaining = TimeOut
+                TimeOutStart = time.time()
+                TimeOutRunning = True
+            if Period > 4 and TimeOutHome == 0:
+                TimeOutHome += 1
+                TimeOutRemaining = TimeOut
+                TimeOutStart = time.time()
+                TimeOutRunning = True
     if keystroke == "TimeOutAway":
         if ClockPauze and not(TimeOutRunning) and not(StartupScreen):
+            if Period <= 2 and TimeOutAway < 2:
+                TimeOutAway += 1
+                TimeOutRemaining = TimeOut
+                TimeOutStart = time.time()
+                TimeOutRunning = True
+            if Period > 2 and Period <= 4 and TimeOutAway < 3:
+                TimeOutAway += 1
+                TimeOutRemaining = TimeOut
+                TimeOutStart = time.time()
+                TimeOutRunning = True
+            if Period > 4 and TimeOutAway == 0:
+                TimeOutAway += 1
+                TimeOutRemaining = TimeOut
+                TimeOutStart = time.time()
+                TimeOutRunning = True
             if Period <= 2 and TimeOutAway < 2:
                 TimeOutAway += 1
                 TimeOutRemaining = TimeOut
@@ -309,11 +361,11 @@ def ConfigScreen():
     if StartupScreen:
         ResetCounter = ResetCounterOptions[TimerChoice]
         RemainingTime = ResetCounter
-        textSetCounter = fontLabelSmall.render('Duration Period (use HomeScore Up/Down + Clockstop)', True, (100, 100, 100), (0, 0, 0))
+        textSetCounter = fontLabelSmall.render('Duration Period (use HomeScore Up/Down + Clockstop)', True, grey, black)
         textRecSetCounter = textSetCounter.get_rect(center=(640, 50))
-        textResetCounter = fontScore.render(str(int(ResetCounter/60)), True, (255, 255, 100), (0, 0, 0))
+        textResetCounter = fontScore.render(str(int(ResetCounter/60)), True, yellow, black)
         textRecResetCounter = textResetCounter.get_rect(center=(640, 150))
-        scr.fill((0, 0, 0))
+        scr.fill(black)
         scr.blit(textSetCounter, textRecSetCounter)
         scr.blit(textResetCounter, textRecResetCounter)
         scr.blit(Manual, (250, 280))
@@ -332,6 +384,7 @@ while running:
 
 # Handle feedback from keyboard
     HandleFeedback(GetKeyboardInput())
+
 # Handle feedback from network
     HandleFeedback(keystroke)
     keystroke = ""

@@ -196,14 +196,7 @@ def HandleFeedback(keystroke):
             FoulsHome = 0
             FoulsAway = 0
         if Period == 3 or Period >= 5:
-        if Period <= 4:
-            FoulsHome = 0
-            FoulsAway = 0
-        if Period == 3 or Period >= 5:
             TimeOutHome, TimeOutAway = 0, 0
-        if Period == 5:
-            ResetCounter = ResetCounterOptions[TimerChoice]
-            ResetCounter = ResetCounter / 2
         if Period == 5:
             ResetCounter = ResetCounterOptions[TimerChoice]
             ResetCounter = ResetCounter / 2
@@ -226,38 +219,8 @@ def HandleFeedback(keystroke):
                 TimeOutRemaining = TimeOut
                 TimeOutStart = time.time()
                 TimeOutRunning = True
-            if Period <= 2 and TimeOutHome < 2:
-                TimeOutHome += 1
-                TimeOutRemaining = TimeOut
-                TimeOutStart = time.time()
-                TimeOutRunning = True
-            if Period > 2 and Period <= 4 and TimeOutHome < 3:
-                TimeOutHome += 1
-                TimeOutRemaining = TimeOut
-                TimeOutStart = time.time()
-                TimeOutRunning = True
-            if Period > 4 and TimeOutHome == 0:
-                TimeOutHome += 1
-                TimeOutRemaining = TimeOut
-                TimeOutStart = time.time()
-                TimeOutRunning = True
     if keystroke == "TimeOutAway":
         if ClockPauze and not(TimeOutRunning) and not(StartupScreen):
-            if Period <= 2 and TimeOutAway < 2:
-                TimeOutAway += 1
-                TimeOutRemaining = TimeOut
-                TimeOutStart = time.time()
-                TimeOutRunning = True
-            if Period > 2 and Period <= 4 and TimeOutAway < 3:
-                TimeOutAway += 1
-                TimeOutRemaining = TimeOut
-                TimeOutStart = time.time()
-                TimeOutRunning = True
-            if Period > 4 and TimeOutAway == 0:
-                TimeOutAway += 1
-                TimeOutRemaining = TimeOut
-                TimeOutStart = time.time()
-                TimeOutRunning = True
             if Period <= 2 and TimeOutAway < 2:
                 TimeOutAway += 1
                 TimeOutRemaining = TimeOut

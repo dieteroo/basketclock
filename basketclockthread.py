@@ -1,5 +1,4 @@
 import pygame # type: ignore
-import pygame # type: ignore
 import sys
 import time
 import math
@@ -7,7 +6,6 @@ import os
 from time import sleep
 import socket
 import threading
-from gpiozero import Buzzer # type: ignore
 from gpiozero import Buzzer # type: ignore
 
 # Set the default path to the python directory
@@ -25,10 +23,10 @@ fontScore = pygame.font.Font('fonts/LED.ttf', 200)
 fontScoreSmall = pygame.font.Font('fonts/LED.ttf', 90)
 fontLabel = pygame.font.Font('fonts/DejaVuSans-Bold.ttf', 80)
 fontLabelSmall = pygame.font.Font('fonts/DejaVuSans-Bold.ttf', 40)
+fontLabelExtraSmall = pygame.font.Font('fonts/DejaVuSans-Bold.ttf', 30)
 
 # Images
 LogoClub = pygame.image.load('image/logo.png')
-Manual = pygame.image.load('image/handleidingScoreboard.png')
 
 # Colors
 cyan = (100, 255, 255)
@@ -56,6 +54,8 @@ ScoreHome = 0
 ScoreAway = 0
 FoulsHome = 0
 FoulsAway = 0
+TimeOutHome = 0
+TimeOutAway = 0
 Period = 1
 Possession = 0
 EndSound = pygame.mixer.Sound('sounds/BUZZER.WAV')
@@ -68,14 +68,11 @@ def PiezoBuzzer():
     buzzer.off()
 TimeOut = 60
 TimeOutRunning = False
-TimeOutHome = 0
-TimeOutAway = 0
 TimeOutRemaining = 0
 Extra = "E"
-Extra = "E"
 StartupScreen = True  # allow configuration
-ResetCounterOptions = (720, 660, 600, 540, 480, 420, 360, 300, 240, 180, 120, 60)
-TimerChoice = 2  # to allow selection of the Timer - default = 10 min
+ResetCounterOptions = (60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720)
+TimerChoice = 9  # to allow selection of the Timer - default = 10 min
 PauzeCounter = 0
 time.sleep(15)
 
@@ -99,7 +96,10 @@ def ScoreBoardUpdate(ScoreHome, ScoreAway, FoulsHome, FoulsAway, Clock, Period, 
     textPauzeCounter = fontScore.render(str(PauzeCounterString), True, yellow, black)
     # Put an "E" to indicate overtime
     if Period >= 5:
-        textPeriod = fontScoreSmall.render(str(Extra), True, yellow, black)
+        if TimerChoice >= 9:
+            textPeriod = fontScoreSmall.render(str(Extra), True, yellow, black)
+        else:
+            textPeriod = fontScoreSmall.render(str(Period), True, yellow, black)
     else:
         textPeriod = fontScoreSmall.render(str(Period), True, yellow, black)
     textTimeOutHome = fontScore.render(TimeOutText[TimeOutHome], True, yellow, black)
@@ -110,7 +110,7 @@ def ScoreBoardUpdate(ScoreHome, ScoreAway, FoulsHome, FoulsAway, Clock, Period, 
     textRectLabelAway = textLabelAway.get_rect(center=(1080, 50))
     textRectFoulsLabelHome = textLabelFouls.get_rect(center=(200, 480))
     textRectFoulsLabelAway = textLabelFouls.get_rect(center=(1080, 480))
-    textRectLabelPeriod = textLabelPeriod.get_rect(center=(600, 50))
+    textRectLabelPeriod = textLabelPeriod.get_rect(center=(590, 50))
 
 # Variable text
     textRectScoreHome = textScoreHome.get_rect(center=(200, 200))
@@ -120,7 +120,7 @@ def ScoreBoardUpdate(ScoreHome, ScoreAway, FoulsHome, FoulsAway, Clock, Period, 
     textRectFoulsAway = textFoulsAway.get_rect(center=(1080, 600))
     textRectTimeOut = textTimeOut.get_rect(center=(640, 600))
     textRectPauzeCounter = textPauzeCounter.get_rect(center=(640, 600))
-    textRectPeriod = textPeriod.get_rect(center=(660, 50))
+    textRectPeriod = textPeriod.get_rect(center=(670, 50))
     textRectTimeOutHome = textTimeOutHome.get_rect(center=(200, 350))
     textRectTimeOutAway = textTimeOutAway.get_rect(center=(1080, 350))
 
@@ -164,82 +164,114 @@ def HandleFeedback(keystroke):
             if not TimeOutRunning:
                 ClockPauze = not(ClockPauze)
     if keystroke == "ScoreHome+":
-        if TimerChoice < len(ResetCounterOptions)-1 and StartupScreen:
-            TimerChoice += 1
         if not(StartupScreen):
             ScoreHome += 1
     if keystroke == "ScoreHome-":
+        if not(StartupScreen):
+            if ScoreHome >= 1:
+                ScoreHome -= 1
+    if keystroke == "FoulHome+":
+        if not(StartupScreen):
+            FoulsHome += 1
+    if keystroke == "FoulHome-":
+        if not(StartupScreen):
+            if FoulsHome >= 1:
+                FoulsHome -= 1
+    if keystroke == "ScoreAway+":
+        if not(StartupScreen):
+            ScoreAway += 1
+    if keystroke == "ScoreAway-":
+        if not(StartupScreen):
+            if ScoreAway >= 1:
+                ScoreAway -= 1
+    if keystroke == "FoulAway+":
+        if not(StartupScreen):
+            FoulsAway += 1
+    if keystroke == "FoulAway-":
+        if not(StartupScreen):
+            if FoulsAway >= 1:
+                FoulsAway -= 1
+    if keystroke == "Possession":
+        if not(StartupScreen):
+            if Possession == 0:
+                Possession = 2
+            Possession = 3 - Possession
+            if Period == 0:
+                Possession = 0
+    if keystroke == "Periode+":
+        if TimerChoice < len(ResetCounterOptions)-1 and StartupScreen:
+            TimerChoice += 1
+        if not(StartupScreen):
+            # Possession = 3 - Possession
+            Period += 1
+            if Period <= 4:
+                FoulsHome = 0
+                FoulsAway = 0
+            if Period == 3 or Period >= 5:
+                TimeOutHome, TimeOutAway = 0, 0
+            if Period == 5:
+                ResetCounter = ResetCounterOptions[TimerChoice]
+                if ResetCounter >= 600:
+                    ResetCounter = ResetCounter / 2
+    if keystroke == "Periode-":
         if TimerChoice > 0 and StartupScreen:
             TimerChoice -= 1
         if not(StartupScreen):
-            ScoreHome -= 1
-    if keystroke == "FoulHome+":
-        FoulsHome += 1
-    if keystroke == "FoulHome-":
-        FoulsHome -= 1
-    if keystroke == "ScoreAway+":
-        ScoreAway += 1
-    if keystroke == "ScoreAway-":
-        ScoreAway -= 1
-    if keystroke == "FoulAway+":
-        FoulsAway += 1
-    if keystroke == "FoulAway-":
-        FoulsAway -= 1
-    if keystroke == "Possession":
-        if Possession == 0:
-            Possession = 2
-        Possession = 3 - Possession
-    if keystroke == "Periode+":
-        # Possession = 3 - Possession
-        Period += 1
-        if Period <= 4:
-            FoulsHome = 0
-            FoulsAway = 0
-        if Period == 3 or Period >= 5:
-            TimeOutHome, TimeOutAway = 0, 0
-        if Period == 5:
-            ResetCounter = ResetCounterOptions[TimerChoice]
-            ResetCounter = ResetCounter / 2
-    if keystroke == "Periode-":
-        Period -= 1
+            if Period >= 1:
+                Period -= 1
+                if Period == 4:
+                    ResetCounter = ResetCounterOptions[TimerChoice]
     if keystroke == "TimeOutHome":
-        if ClockPauze and not(TimeOutRunning) and not(StartupScreen):
-            if Period <= 2 and TimeOutHome < 2:
-                TimeOutHome += 1
-                TimeOutRemaining = TimeOut
-                TimeOutStart = time.time()
-                TimeOutRunning = True
-            if Period > 2 and Period <= 4 and TimeOutHome < 3:
-                TimeOutHome += 1
-                TimeOutRemaining = TimeOut
-                TimeOutStart = time.time()
-                TimeOutRunning = True
-            if Period > 4 and TimeOutHome == 0:
-                TimeOutHome += 1
-                TimeOutRemaining = TimeOut
-                TimeOutStart = time.time()
-                TimeOutRunning = True
+        if not(StartupScreen):
+            if ClockPauze and not(TimeOutRunning) and not(StartupScreen) and RemainingTime != 0:
+                if Period <= 2 and TimeOutHome < 2:
+                    TimeOutHome += 1
+                    TimeOutRemaining = TimeOut
+                    TimeOutStart = time.time()
+                    TimeOutRunning = True
+                if Period > 2 and Period <= 4 and TimeOutHome < 3:
+                    TimeOutHome += 1
+                    TimeOutRemaining = TimeOut
+                    TimeOutStart = time.time()
+                    TimeOutRunning = True
+                if Period > 4 and TimeOutHome == 0:
+                    TimeOutHome += 1
+                    TimeOutRemaining = TimeOut
+                    TimeOutStart = time.time()
+                    TimeOutRunning = True
     if keystroke == "TimeOutAway":
-        if ClockPauze and not(TimeOutRunning) and not(StartupScreen):
-            if Period <= 2 and TimeOutAway < 2:
-                TimeOutAway += 1
-                TimeOutRemaining = TimeOut
-                TimeOutStart = time.time()
-                TimeOutRunning = True
-            if Period > 2 and Period <= 4 and TimeOutAway < 3:
-                TimeOutAway += 1
-                TimeOutRemaining = TimeOut
-                TimeOutStart = time.time()
-                TimeOutRunning = True
-            if Period > 4 and TimeOutAway == 0:
-                TimeOutAway += 1
-                TimeOutRemaining = TimeOut
-                TimeOutStart = time.time()
-                TimeOutRunning = True
+        if not(StartupScreen):
+            if ClockPauze and not(TimeOutRunning) and not(StartupScreen) and RemainingTime != 0:
+                if Period <= 2 and TimeOutAway < 2:
+                    TimeOutAway += 1
+                    TimeOutRemaining = TimeOut
+                    TimeOutStart = time.time()
+                    TimeOutRunning = True
+                if Period > 2 and Period <= 4 and TimeOutAway < 3:
+                    TimeOutAway += 1
+                    TimeOutRemaining = TimeOut
+                    TimeOutStart = time.time()
+                    TimeOutRunning = True
+                if Period > 4 and TimeOutAway == 0:
+                    TimeOutAway += 1
+                    TimeOutRemaining = TimeOut
+                    TimeOutStart = time.time()
+                    TimeOutRunning = True
     if keystroke == "RestartTimer":
-        if ClockPauze:
-            RemainingTime = ResetCounter
-            EndSoundPlayed = False
+        if not(StartupScreen):
+            if ClockPauze:
+                RemainingTime = ResetCounter
+                EndSoundPlayed = False
+                if Period == 0:
+                    StartupScreen = True
+                    ScoreHome = 0
+                    ScoreAway = 0
+                    FoulsHome = 0
+                    FoulsAway = 0
+                    TimeOutHome = 0
+                    TimeOutAway = 0
+                    Period = 1
+                    Possession = 0
 
 # Get keyboard inputs
 def GetKeyboardInput():
@@ -324,14 +356,34 @@ def ConfigScreen():
     if StartupScreen:
         ResetCounter = ResetCounterOptions[TimerChoice]
         RemainingTime = ResetCounter
-        textSetCounter = fontLabelSmall.render('Duration Period (use HomeScore Up/Down + Clockstop)', True, grey, black)
-        textRecSetCounter = textSetCounter.get_rect(center=(640, 50))
+        textDuration = fontLabel.render('Duration Period', True, grey, black)
+        textRecDuration = textDuration.get_rect(topleft=(50, 75))
+        textChange = fontLabelSmall.render('Use PERIOD - or + to change value', True, grey, black)
+        textRecChange = textChange.get_rect(topleft=(50, 200))
+        textStart = fontLabelSmall.render('Use START - STOP to confirm', True, grey, black)
+        textRecStart = textStart.get_rect(topleft=(50, 250))
         textResetCounter = fontScore.render(str(int(ResetCounter/60)), True, yellow, black)
-        textRecResetCounter = textResetCounter.get_rect(center=(640, 150))
+        textRecResetCounter = textResetCounter.get_rect(center=(1000, 100))
+        textU6 = fontLabelExtraSmall.render('U6:  1 match - 8 min - continuous clock', True, grey, black)
+        textRecU6 = textU6.get_rect(topleft=(50, 520))
+        textU8 = fontLabelExtraSmall.render('U8:  8 quarters - 6 min - continuous clock', True, grey, black)
+        textRecU8 = textU8.get_rect(topleft=(50, 560))
+        textU10 = fontLabelExtraSmall.render('U10: 8 quarters - 5 min - cronostop', True, grey, black)
+        textRecU10 = textU10.get_rect(topleft=(50, 600))
+        textU12 = fontLabelExtraSmall.render('U12 & above: 4 quarters - 10 min - cronostop', True, grey, black)
+        textRecU12 = textU12.get_rect(topleft=(50, 640))
+
         scr.fill(black)
-        scr.blit(textSetCounter, textRecSetCounter)
+
+        scr.blit(textDuration, textRecDuration)
+        scr.blit(textChange, textRecChange)
+        scr.blit(textStart, textRecStart)
         scr.blit(textResetCounter, textRecResetCounter)
-        scr.blit(Manual, (250, 280))
+        scr.blit(LogoClub, (390, 330))
+        scr.blit(textU6, textRecU6)
+        scr.blit(textU8, textRecU8)
+        scr.blit(textU10, textRecU10)
+        scr.blit(textU12, textRecU12)
         pygame.display.flip()
 
 # Start the network threat to get socket commands

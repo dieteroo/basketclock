@@ -20,8 +20,7 @@ sudo mkdir /opt/basketclock /opt/basketclock/fonts /opt/basketclock/image /opt/b
 sudo curl $URL/basketclockthread.py -o /opt/basketclock/basketclockthread.py
 sudo curl $URL/fonts/DejaVuSans-Bold.ttf -o /opt/basketclock/fonts/DejaVuSans-Bold.ttf
 sudo curl $URL/fonts/LED.ttf -o /opt/basketclock/fonts/LED.ttf
-sudo curl $URL/image/logo.png -o /opt/basketclock/image/logo.png
-sudo curl $URL/image/handleidingScoreboard.png -o /opt/basketclock/image/handleidingScoreboard.png
+sudo curl $URL/image/logo.png -o /opt/basketclock/image/logo.svg
 sudo curl $URL/sounds/BUZZER.WAV -o /opt/basketclock/sounds/BUZZER.WAV
 
 ## Install pygame

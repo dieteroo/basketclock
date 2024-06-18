@@ -26,7 +26,7 @@ fontLabelSmall = pygame.font.Font('fonts/DejaVuSans-Bold.ttf', 40)
 fontLabelExtraSmall = pygame.font.Font('fonts/DejaVuSans-Bold.ttf', 30)
 
 # Images
-LogoClub = pygame.image.load('image/logo.png')
+LogoClub = pygame.image.load('image/logo.svg')
 
 # Colors
 cyan = (100, 255, 255)
@@ -34,6 +34,7 @@ red = (255, 0, 0)
 yellow = (255, 255, 0)
 grey = (100, 100, 100)
 black = (0, 0, 0)
+white = (255, 255, 255)
 
 # Text
 textLabelHome = fontLabel.render('HOME', True, grey, black)
@@ -142,7 +143,7 @@ def ScoreBoardUpdate(ScoreHome, ScoreAway, FoulsHome, FoulsAway, Clock, Period, 
     scr.blit(textPeriod, textRectPeriod)
     scr.blit(textTimeOutHome, textRectTimeOutHome)
     scr.blit(textTimeOutAway, textRectTimeOutAway)
-    scr.blit(LogoClub, (390, 330))
+    scr.blit(LogoClub, (350, 330))
     if Possession == 1:
         pygame.draw.rect(scr, red, (420, 40, 50, 10))
         pygame.draw.polygon(scr, red, [(390, 45), (420, 75), (420, 15)])
@@ -356,6 +357,7 @@ def ConfigScreen():
     if StartupScreen:
         ResetCounter = ResetCounterOptions[TimerChoice]
         RemainingTime = ResetCounter
+
         textDuration = fontLabel.render('Duration Period', True, grey, black)
         textRecDuration = textDuration.get_rect(topleft=(50, 75))
         textChange = fontLabelSmall.render('Use PERIOD - or + to change value', True, grey, black)
@@ -364,26 +366,35 @@ def ConfigScreen():
         textRecStart = textStart.get_rect(topleft=(50, 250))
         textResetCounter = fontScore.render(str(int(ResetCounter/60)), True, yellow, black)
         textRecResetCounter = textResetCounter.get_rect(center=(1000, 100))
-        textU6 = fontLabelExtraSmall.render('U6:  1 match - 8 min - continuous clock', True, grey, black)
-        textRecU6 = textU6.get_rect(topleft=(50, 520))
-        textU8 = fontLabelExtraSmall.render('U8:  8 quarters - 6 min - continuous clock', True, grey, black)
-        textRecU8 = textU8.get_rect(topleft=(50, 560))
-        textU10 = fontLabelExtraSmall.render('U10: 8 quarters - 5 min - cronostop', True, grey, black)
-        textRecU10 = textU10.get_rect(topleft=(50, 600))
-        textU12 = fontLabelExtraSmall.render('U12 & above: 4 quarters - 10 min - cronostop', True, grey, black)
-        textRecU12 = textU12.get_rect(topleft=(50, 640))
+        textCont = fontLabelExtraSmall.render(' min - continuous clock', True, grey, black)
+        textCrono = fontLabelExtraSmall.render(' min - cronostop', True, grey, black)
+        text5 = fontLabelExtraSmall.render('5', True, yellow, black)
+        text6 = fontLabelExtraSmall.render('6', True, yellow, black)
+        text8 = fontLabelExtraSmall.render('8', True, yellow, black)
+        text10 = fontLabelExtraSmall.render('10', True, yellow, black)
+        textU6 = fontLabelExtraSmall.render('U6:  1 match - ', True, grey, black)
+        textU8 = fontLabelExtraSmall.render('U8:  8 quarters - ', True, grey, black)
+        textU10 = fontLabelExtraSmall.render('U10: 8 quarters - ', True, grey, black)
+        textU12 = fontLabelExtraSmall.render('U12 & above: 4 quarters - ', True, grey, black)
 
         scr.fill(black)
-
         scr.blit(textDuration, textRecDuration)
         scr.blit(textChange, textRecChange)
         scr.blit(textStart, textRecStart)
         scr.blit(textResetCounter, textRecResetCounter)
-        scr.blit(LogoClub, (390, 330))
-        scr.blit(textU6, textRecU6)
-        scr.blit(textU8, textRecU8)
-        scr.blit(textU10, textRecU10)
-        scr.blit(textU12, textRecU12)
+        scr.blit(LogoClub, (350, 330))
+        scr.blit(textU6, (50, 520))
+        scr.blit(text8, (50 + textU6.get_width(), 520))
+        scr.blit(textCont, (50 + textU6.get_width() + text8.get_width(), 520))
+        scr.blit(textU8, (50, 560))
+        scr.blit(text6, (50 + textU8.get_width(), 560))
+        scr.blit(textCont, (50 + textU8.get_width() + text6.get_width(), 560))
+        scr.blit(textU10, (50, 600))
+        scr.blit(text5, (50 + textU10.get_width(), 600))
+        scr.blit(textCrono, (50 + textU10.get_width() + text5.get_width(), 600))
+        scr.blit(textU12, (50, 640))
+        scr.blit(text10, (50 + textU12.get_width(), 640))
+        scr.blit(textCrono, (50 + textU12.get_width() + text10.get_width(), 640))
         pygame.display.flip()
 
 # Start the network threat to get socket commands

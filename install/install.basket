@@ -21,7 +21,8 @@ sudo curl $URL/basketclockthread.py -o /opt/basketclock/basketclockthread.py
 sudo curl $URL/fonts/DejaVuSans-Bold.ttf -o /opt/basketclock/fonts/DejaVuSans-Bold.ttf
 sudo curl $URL/fonts/LED.ttf -o /opt/basketclock/fonts/LED.ttf
 sudo curl $URL/image/logo.svg -o /opt/basketclock/image/logo.svg
-sudo curl $URL/sounds/BUZZER.WAV -o /opt/basketclock/sounds/BUZZER.WAV
+sudo curl $URL/image/loading1.svg -o /opt/basketclock/image/loading1.svg
+sudo curl $URL/image/loading2.svg -o /opt/basketclock/image/loading2.svg
 
 ## Install pygame
 sudo apt install python3-pip -y

@@ -28,6 +28,8 @@ fontLabelExtraSmall = pygame.font.Font('fonts/DejaVuSans-Bold.ttf', 30)
 
 # Images
 LogoClub = pygame.image.load('image/logo.svg')
+Loading1 = pygame.image.load('image/loading1.svg')
+Loading2 = pygame.image.load('image/loading2.svg')
 
 # Colors
 cyan = (100, 255, 255)
@@ -82,12 +84,19 @@ StartupScreen = True  # allow configuration
 ResetCounterOptions = (60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720)
 TimerChoice = 9  # to allow selection of the Timer - default = 10 min
 
-# Splash screen
+# SplashScreen
 scr.fill(black)
 scr.blit(LogoClub, (350, 330))
 pygame.display.flip()
-
-time.sleep(15)
+Loading = 0
+while Loading < 5:
+    scr.blit(Loading1, (500, 460))
+    pygame.display.flip()
+    time.sleep(1)
+    scr.blit(Loading2, (500, 460))
+    pygame.display.flip()
+    time.sleep(1)
+    Loading += 1
 
 # Function for the changing digits
 def ScoreBoardUpdate(ScoreHome, ScoreAway, FoulsHome, FoulsAway, Clock, Period, TimeOutRemaining, PauzeCounterString, Possession):

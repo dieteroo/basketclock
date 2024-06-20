@@ -10,7 +10,8 @@
   Select your storage device 
 * NEXT 
  
-* EDIT SETTINGS
+* Would you like to use OS customisation settings?
+  EDIT SETTINGS
 * Set hostname 
 * Set username and password
 ! DO NOT CONFIGURE wireless LAN ! see notes below
@@ -22,7 +23,25 @@
 * Allow public-key authentication only 
   Set authorized_key for 'user'
 * SAVE 
+
+* Would you like to use OS customisation settings?
 * YES
+
+* Would you like to prefill the wifi password from the system keychain?
+* NO
+
+* All existing data on 'your storage device' will be erased
+* Are you sure you want to continue?
+* YES
+
+####
+Raspberry Pi OS (Legacy) Lite
+Release date: March 12th 2024
+System: 32-bit
+Kernel version: 6.1
+Debian version: 11 (bullseye)
+Size: 365MB
+####
 ```
 ## Place micro SD in Raspberry Pi 
 ## Connect network cable, HDMI cable & power cable

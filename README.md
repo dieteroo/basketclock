@@ -1,12 +1,14 @@
 # Basketball clock with HDMI display
 A basketball clock is an important investment for a lot of clubs so this project is intended to build a basketball clock using any HDMI enabled device.
 
-The Raspberry Pi device is plugged into the HDMI port of a TV (or any HDMI enabled device) and can use the TV speakers or any audio amplifyer connected to the Pi.
-When booting up the Raspberry, you get a startscreen that allows you to select the default time of a period.  This is required because U8/U10/all above, have different period durations.
+The Raspberry Pi device is plugged into the HDMI port of a TV (or any HDMI enabled device). A buzzer is connected to the GPIO pins of the Raspberry Pi.
+
+When booting up the Raspberry Pi, you get a configscreen that allows you to select the default time of a period.  This is required because U6/U8/U10/U12 & all above, have different period durations.
+![Scoreboard](/image/configscreen.png)
 
 After selecting the period, you get to the actual scoreboard:
 
-![Scoreboard](/photo/scoreboard.jpg)
+![Scoreboard](/image/scoreboard.png)
 
 The supported features are:
 - Main clock with start/stop and button for reset
@@ -25,9 +27,7 @@ The basketball scoreboard with clock can be controlled with a wireless keyboard 
   * Micropython micro controller
   * Box + 15 buttons for the controls
 
-![Scoreboard](/photo/startscreen.jpg)
-
-![Scoreboard](/photo/controlpanel.jpg)
+![Scoreboard](/image/remote.svg)
 
 ## Howto build this project
 ### Raspberry

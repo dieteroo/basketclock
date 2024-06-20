@@ -72,6 +72,7 @@ TimeOutRunning = False
 TimeOutRemaining = 0
 
 # Sound variables
+EndSound = pygame.mixer.Sound('sounds/BUZZER.WAV')
 EndSoundPlayed = False  # required to only play 1 time
 buzzer = Buzzer(16)  # Buzzer - Connect your piezobuzzer to ground and GPIO pin16
 def PiezoBuzzer():
@@ -479,6 +480,7 @@ while running:
     if RemainingTime == 0:
         ClockPauze = True
         if EndSoundPlayed == False:
+            EndSound.play()
             threading.Thread(target=PiezoBuzzer).start()
             EndSoundPlayed = True
 
@@ -500,10 +502,12 @@ while running:
     if TimeOutRunning:
         if TimeOutRemaining <= 0:
             TimeOutRunning = False
+            EndSound.play()
             threading.Thread(target=PiezoBuzzer).start()
         else:
             TimeOutRemaining = TimeOut - int(round(time.time()-TimeOutStart))
             if TimeOutRemaining == 10:
+                EndSound.play()
                 threading.Thread(target=PiezoBuzzer).start()
     if not(StartupScreen):
         ScoreBoardUpdate(ScoreHome, ScoreAway, FoulsHome, FoulsAway, RemainingString, Period, TimeOutRemaining, PauzeCounterString, Possession)

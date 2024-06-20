@@ -1,110 +1,78 @@
-import machine
-from machine import Pin, PWM
-import network
-import time
 from time import sleep
 import usocket
 
-# Set rgb led pins (red / ground - longest pin / green / blue - shortest pin)
-frequency = 5000
-# Pin initialization (starts 3rd pin on the right bottomside usb)
-red = PWM(Pin(15), frequency)
-green = PWM(Pin(2), frequency)
-blue = PWM(Pin(4), frequency)
-# info: # ground = machine.Pin(GND)
+# Server settings
+SERVER_IP = '10.3.141.1'
+SERVER_PORT = 8080
 
-blue.duty(256)
-red.duty(0)
-green.duty(0)
-
-print('Starting Pin Input initialization')
-# Pin initialization (starts 3th pin left below - side usb)
-Input1 = machine.Pin(13, machine.Pin.IN, machine.Pin.PULL_UP)
-Input2 = machine.Pin(12, machine.Pin.IN, machine.Pin.PULL_UP)
-Input3 = machine.Pin(14, machine.Pin.IN, machine.Pin.PULL_UP)
-Input4 = machine.Pin(27, machine.Pin.IN, machine.Pin.PULL_UP)
-Input5 = machine.Pin(26, machine.Pin.IN, machine.Pin.PULL_UP)
-print('Starting Pin Output initialization')
-Output1 = machine.Pin(25, machine.Pin.OUT)
-Output1.value(1)
-Output2 = machine.Pin(33, machine.Pin.OUT)
-Output2.value(1)
-Output3 = machine.Pin(32, machine.Pin.OUT)
-Output3.value(1)
-
-keypushed = ""
+# LED color definitions for different states
+COLOR_SERVER_CONNECTED = (0, 50, 0)  # Green
+COLOR_KEYPRESSED = (0, 0, 50)  # Blue
 
 # Key mapping of the keyboard matrix
-Matrix = [["TimeOutHome","Periode-","RestartTimer","Periode+","TimeOutAway"],
-          ["FoulHome-","FoulHome+","Possession","FoulAway-","FoulAway+"],
-          ["ScoreHome-","ScoreHome+","StartStop","ScoreAway-","ScoreAway+"]]
+MATRIX = [
+    ["TimeOutHome", "Periode-", "RestartTimer", "Periode+", "TimeOutAway"],
+    ["FoulHome-", "FoulHome+", "Possession", "FoulAway-", "FoulAway+"],
+    ["ScoreHome-", "ScoreHome+", "StartStop", "ScoreAway-", "ScoreAway+"]
+]
 
-print('Starting connection to server 10.3.141.1:8080')
-client = usocket.socket(usocket.AF_INET, usocket.SOCK_STREAM)
-try:
-    client.connect(('10.3.141.1', 8080))  # IP address and port of the server
-    client.send(b'Nothing')
-except OSError as e:
-    print("Error connecting to server:", e)
-    client.close()
-    machine.reset()
-print('Connection established')
+# Pin configuration
+INPUT_PINS = [12, 14, 27, 26, 25]
+OUTPUT_PINS = [17, 16, 4]
 
-while True:
-    blue.duty(0)
-    red.duty(0)
-    green.duty(256)
-    # Test all buttons
-    Output1.value(0)
-    if Input1.value() == 0:
-        keypushed = "TimeOutHome"
-    elif Input2.value() == 0:
-        keypushed = "Periode-"
-    elif Input3.value() == 0:
-        keypushed = "RestartTimer"
-    elif Input4.value() == 0:
-        keypushed = "Periode+"
-    elif Input5.value() == 0:
-        keypushed = "TimeOutAway"
-    Output1.value(1)
+def initialize_pins():
+    inputs = [Pin(pin, Pin.IN, Pin.PULL_UP) for pin in INPUT_PINS]
+    outputs = [Pin(pin, Pin.OUT) for pin in OUTPUT_PINS]
+    return inputs, outputs
 
-    Output2.value(0)
-    if Input1.value() == 0:
-        keypushed = "FoulHome-"
-    elif Input2.value() == 0:
-        keypushed = "FoulHome+"
-    elif Input3.value() == 0:
-        keypushed = "Possession"
-    elif Input4.value() == 0:
-        keypushed = "FoulAway-"
-    elif Input5.value() == 0:
-        keypushed = "FoulAway+"
-    Output2.value(1)
+def connect_to_server(ip, port):
+    client = usocket.socket(usocket.AF_INET, usocket.SOCK_STREAM)
+    try:
+        client.connect((ip, port))
+        client.send(b'Nothing')
+        return client
+    except OSError as e:
+        print("Error connecting to server:", e)
+        client.close()
+        return None
 
-    Output3.value(0)
-    if Input1.value() == 0:
-        keypushed = "ScoreHome-"
-    elif Input2.value() == 0:
-        keypushed = "ScoreHome+"
-    elif Input3.value() == 0:
-        keypushed = "StartStop"
-    elif Input4.value() == 0:
-        keypushed = "ScoreAway-"
-    elif Input5.value() == 0:
-        keypushed = "ScoreAway+"
-    Output3.value(1)
+def check_inputs(inputs, outputs, matrix):
+    keypushed = ""
+    for i, output in enumerate(outputs):
+        output.value(0)
+        for j, input_pin in enumerate(inputs):
+            if input_pin.value() == 0:
+                keypushed = matrix[i][j]
+                break
+        output.value(1)
+        if keypushed:
+            break
+    return keypushed
 
-    if keypushed:
-        green.duty(0)
-        blue.duty(256)
-        print("Pressed key:", keypushed)
-        try: 
-            client.send(keypushed.encode())
-        except client.error:
-            client.close()
-        keypushed = ""
-        time.sleep(0.3)
-        blue.duty(0)
-        green.duty(256)
+def main():
+    inputs, outputs = initialize_pins()
 
-client.close()
+    while True:
+        client = connect_to_server(SERVER_IP, SERVER_PORT)
+        if client:
+            set_color(*COLOR_SERVER_CONNECTED)  # Green when connected
+            while True:
+                keypushed = check_inputs(inputs, outputs, MATRIX)
+                if keypushed:
+                    print("Pressed key:", keypushed)
+                    try:
+                        client.send(keypushed.encode())
+                        set_color(*COLOR_KEYPRESSED)  # Blue when pushed
+                    except OSError:
+                        client.close()
+                        break  # Exit inner loop to reconnect
+                    keypushed = ""
+                    time.sleep(SLEEP_DURATION)
+                    set_color(*COLOR_SERVER_CONNECTED)  # Green when connected
+        else:
+            set_color(*COLOR_ERROR)  # Red on error
+            time.sleep(RETRY_DELAY)
+
+if __name__ == "__main__":
+    main()
+

@@ -83,24 +83,15 @@ Indien dit niet werkt, kan je het bedieningspaneel opnieuw opstarten door de str
 **PAS OP**
 
 - Wanneer je naar de volgende periode gaat worden de ploegfouten automatisch op 0 gezet, buiten in extra time.
-
 - Wanneer je naar de volgende periode gaat word het balbezit NIET automatisch aangepast, dit dien je manueel te doen in overleg met de scheidsrechter.
-
 - Wanneer je naar periode 3 gaat worden de time-outs op 0 gezet.
-
 - Wanneer je naar extra time gaat worden de time-outs elke periode op 0 gezet.
-
 - In periode 1 & 2 kan je in totaal twee time-outs ingeven, in periode 3 & 4 kan je in totaal 3 time-outs ingeven.
-
 - Er wordt geen rekening gehouden met de laatste 2 minuten regel betreffende time-outs.
-
 - In extra time kan je per periode 1 time-out ingeven.
-
 - Wanneer je naar periode 5 gaat (wordt vanaf 5 weergegeven als “E”) en op “RESET TIMER” drukt wordt de tijd van de hoofdklok automatisch gehalveerd. (Enkel indien de tijd groter dan of gelijk aan 10 minuten is.)
-
 - Wanneer je de pijl voor balbezit activeert maar deze niet wenst te gebruiken is het enkel mogelijk deze te verwijderen door naar Periode 0 te gaan en op de knop “POSSESSION” te duwen. Let wel: de time-outs en ploegfouten worden mogelijks op 0 geplaatst volgens bovenstaande regels.
-
-- Je kan de hoofdklok ook terugzetten wanneer de tijd niet op 00:00 staat door de knop “RESER TIMER” in te drukken.
+- Je kan de hoofdklok ook terugzetten wanneer de tijd niet op 00:00 staat door de knop “RESET TIMER” in te drukken.
 
 **OPNIEUW STARTEN?**
 

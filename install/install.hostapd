@@ -18,17 +18,17 @@ case $VERSION in
   11)
     # Create a configuration snippet to tell dhcpcd to ignore wlan0
     sudo bash -c 'cat <<EOF >>/etc/dhcpcd.conf
-    denyinterfaces wlan0
-    EOF'
+denyinterfaces wlan0
+EOF'
     # Restart dhcpcd service to apply the changes
     sudo systemctl restart dhcpcd
     ;;
   12)
     # Create a configuration snippet to tell NetworkManager to ignore wlan0
     sudo bash -c 'cat <<EOF >>/etc/NetworkManager/conf.d/ignore-wlan0.conf
-    [keyfile]
-    unmanaged-devices=interface-name:wlan0
-    EOF'
+[keyfile]
+unmanaged-devices=interface-name:wlan0
+EOF'
     # Restart the NetworkManager service to apply the changes
     sudo systemctl restart NetworkManager
     ;;

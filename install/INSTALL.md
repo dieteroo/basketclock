@@ -5,7 +5,11 @@
   Select your device 
 * CHOOSE OS
   Select Raspberry Pi OS (other) 
-  Select Raspberry Pi OS (Legacy, 32-bit) Lite 
+  - Select Raspberry Pi OS Lite (32-bit)
+    A port of Debian Bookworm with no desktop environment
+  OR
+  - Select Raspberry Pi OS (Legacy, 32-bit) Lite
+    A port of Debian Bullseye with security updates and no desktop environment
 * CHOOSE STORAGE 
   Select your storage device 
 * NEXT 

@@ -17,7 +17,7 @@ VERSION=$(grep -oP '(?<=^VERSION_ID=).+' /etc/os-release | tr -d '"')
 case $VERSION in
   11)
     # Create a configuration snippet to tell dhcpcd to ignore wlan0
-    sudo bash -c 'cat <<EOF >>/etc/dhcpcd.conf
+sudo bash -c 'cat <<EOF >>/etc/dhcpcd.conf
 denyinterfaces wlan0
 EOF'
     # Restart dhcpcd service to apply the changes
@@ -25,7 +25,7 @@ EOF'
     ;;
   12)
     # Create a configuration snippet to tell NetworkManager to ignore wlan0
-    sudo bash -c 'cat <<EOF >>/etc/NetworkManager/conf.d/ignore-wlan0.conf
+sudo bash -c 'cat <<EOF >>/etc/NetworkManager/conf.d/ignore-wlan0.conf
 [keyfile]
 unmanaged-devices=interface-name:wlan0
 EOF'
@@ -50,10 +50,10 @@ iface eth0 inet dhcp
 # Wireless interface configuration, set to use a static IP address
 allow-hotplug wlan0
 iface wlan0 inet static
-    address 10.3.141.1         # Static IP address for wlan0
-    netmask 255.255.255.0      # Subnet mask for wlan0
-    network 10.3.141.0         # Network address for wlan0
-    broadcast 10.3.141.255     # Broadcast address for wlan0
+    address 10.3.141.1
+    netmask 255.255.255.0
+    network 10.3.141.0
+    broadcast 10.3.141.255
 EOF'
 
 # Restart the wlan0 interface to apply changes
@@ -64,19 +64,32 @@ sudo apt-get install hostapd -y
 
 # Create the hostapd configuration file
 sudo bash -c 'cat <<EOF >hostapd.conf
-interface=wlan0                 # Specify the wireless interface to use
-driver=nl80211                  # Driver for the wireless interface
-ssid=_wifi_SSID_                # SSID (network name) placeholder
-channel=_wifi_CHANNEL_          # WiFi channel placeholder
-hw_mode=g                       # Set the WiFi mode to g (2.4 GHz)
-macaddr_acl=0                   # Disable MAC address filtering
-auth_algs=3                     # Enable WPA (Wi-Fi Protected Access)
-ignore_broadcast_ssid=0         # Ensure the SSID is broadcasted
-wpa=2                           # Use WPA2 for security
-wpa_passphrase=_wifi_PASS_      # WPA2 passphrase placeholder
-wpa_key_mgmt=WPA-PSK            # WPA-PSK (Pre-Shared Key) authentication
-wpa_pairwise=TKIP               # WPA pairwise key encryption
-rsn_pairwise=CCMP               # WPA2 pairwise key encryption
+# Specify the wireless interface to use
+interface=wlan0
+# Driver for the wireless interface
+driver=nl80211
+# SSID (network name) placeholder
+ssid=_wifi_SSID_
+# WiFi channel placeholder
+channel=channel=_wifi_CHANNEL_
+# Set the WiFi mode to g (2.4 GHz)
+hw_mode=g
+# Disable MAC address filtering
+macaddr_acl=0
+# Enable WPA (Wi-Fi Protected Access)
+auth_algs=3
+# Ensure the SSID is broadcasted
+ignore_broadcast_ssid=0
+# Use WPA2 for security
+wpa=2
+# WPA2 passphrase placeholder
+wpa_passphrase=_wifi_PASS_
+# WPA-PSK (Pre-Shared Key) authentication
+wpa_key_mgmt=WPA-PSK
+# WPA pairwise key encryption
+wpa_pairwise=TKIP
+# WPA2 pairwise key encryption
+rsn_pairwise=CCMP
 EOF'
 
 # Move the hostapd configuration file to the correct location

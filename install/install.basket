@@ -3,16 +3,6 @@
 ## Change the URL to the project URL
 URL=https://raw.githubusercontent.com/dieteroo/basketclock/test
 
-## Make sure the system is up to date
-sudo apt-get update
-sudo apt-get upgrade -y
-sudo apt-get autoclean
-sudo apt-get autoremove
-
-## Important changes
-sudo raspi-config nonint do_resolution 1280 768
-sudo raspi-config nonint do_wifi_country BE
-
 ## Create program directories
 sudo mkdir /opt/basketclock /opt/basketclock/fonts /opt/basketclock/image /opt/basketclock/sounds
 
@@ -25,10 +15,45 @@ sudo curl $URL/image/logo.svg -o /opt/basketclock/image/logo.svg
 sudo curl $URL/image/loading1.svg -o /opt/basketclock/image/loading1.svg
 sudo curl $URL/image/loading2.svg -o /opt/basketclock/image/loading2.svg
 
+## Make sure the system is up to date
+sudo apt-get update
+sudo apt-get upgrade -y
+sudo apt-get autoclean
+sudo apt-get autoremove
+
+## Important changes
+sudo raspi-config nonint do_resolution 1280 768
+sudo raspi-config nonint do_wifi_country BE
+
+# Get the version number from the OS release information
+VERSION=$(grep -oP '(?<=^VERSION_ID=).+' /etc/os-release | tr -d '"')
+
+# Enable audio
+case $VERSION in
+    11)
+        sudo sed -i -e 's/vc4-kms-v3d/vc4-fkms-v3d/' /boot/config.txt
+        ;;
+    12)
+        sudo sed -i -e 's/vc4-kms-v3d/vc4-fkms-v3d/' /boot/firmware/config.txt
+        ;;
+    *)
+        echo "Unsupported version: $VERSION"
+        ;;
+esac
+
 ## Install pygame
 sudo apt install python3-pip -y
-PIP_BREAK_SYSTEM_PACKAGES=1
-python3 -m pip install pygame
+case $VERSION in
+    11)
+        PIP_BREAK_SYSTEM_PACKAGES=1 python3 -m pip install pygame
+        ;;
+    12)
+        python3 -m pip install pygame --break-system-packages
+        ;;
+    *)
+        echo "Unsupported version: $VERSION"
+        ;;
+esac
 
 ## Install dependencies
 sudo apt install libsdl2-2.0-0 libsdl2-ttf-2.0-0 libsdl2-mixer-2.0-0 libsdl2-image-2.0-0 -y

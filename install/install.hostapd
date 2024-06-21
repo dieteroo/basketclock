@@ -71,7 +71,7 @@ driver=nl80211
 # SSID (network name) placeholder
 ssid=_wifi_SSID_
 # WiFi channel placeholder
-channel=channel=_wifi_CHANNEL_
+channel=_wifi_CHANNEL_
 # Set the WiFi mode to g (2.4 GHz)
 hw_mode=g
 # Disable MAC address filtering

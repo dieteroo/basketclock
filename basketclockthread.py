@@ -264,7 +264,7 @@ def HandleFeedback(keystroke):
                     TimeOutRunning = True
     if keystroke == "TimeOutAway":
         if not(StartupScreen):
-            if ClockPauze and not(TimeOutRunning) and not(StartupScreen) and RemainingTime != 0:
+            if ClockPauze and not(TimeOutRunning) and RemainingTime != 0:
                 if Period <= 2 and TimeOutAway < 2:
                     TimeOutAway += 1
                     TimeOutRemaining = TimeOut
@@ -296,6 +296,9 @@ def HandleFeedback(keystroke):
                     TimeOutAway = 0
                     Period = 1
                     Possession = 0
+    if keystroke == "Buzzer":
+        if not(StartupScreen):
+            threading.Thread(target=PiezoBuzzer).start()
 
 # Get keyboard inputs
 def GetKeyboardInput():
@@ -362,24 +365,24 @@ def ConfigScreen():
         ResetCounter = ResetCounterOptions[TimerChoice]
         RemainingTime = ResetCounter
 
-        textDuration = fontLabel.render('Duration Period', True, grey, black)
+        textDuration = fontLabel.render('Duration Period', True, white, black)
         textRecDuration = textDuration.get_rect(topleft=(50, 75))
-        textChange = fontLabelSmall.render('Use PERIOD - or + to change value', True, grey, black)
+        textChange = fontLabelSmall.render('Use PERIOD - or + to change value', True, white, black)
         textRecChange = textChange.get_rect(topleft=(50, 200))
-        textStart = fontLabelSmall.render('Use START - STOP to confirm', True, grey, black)
+        textStart = fontLabelSmall.render('Use START - STOP to confirm', True, white, black)
         textRecStart = textStart.get_rect(topleft=(50, 250))
         textResetCounter = fontScore.render(str(int(ResetCounter/60)), True, yellow, black)
         textRecResetCounter = textResetCounter.get_rect(center=(1000, 100))
-        textCont = fontLabelExtraSmall.render(' min - continuous clock', True, grey, black)
-        textCrono = fontLabelExtraSmall.render(' min - cronostop', True, grey, black)
+        textCont = fontLabelExtraSmall.render(' min - continuous clock', True, white, black)
+        textCrono = fontLabelExtraSmall.render(' min - cronostop', True, white, black)
         text5 = fontLabelExtraSmall.render('5', True, yellow, black)
         text6 = fontLabelExtraSmall.render('6', True, yellow, black)
         text8 = fontLabelExtraSmall.render('8', True, yellow, black)
         text10 = fontLabelExtraSmall.render('10', True, yellow, black)
-        textU6 = fontLabelExtraSmall.render('U6:  1 match - ', True, grey, black)
-        textU8 = fontLabelExtraSmall.render('U8:  8 quarters - ', True, grey, black)
-        textU10 = fontLabelExtraSmall.render('U10: 8 quarters - ', True, grey, black)
-        textU12 = fontLabelExtraSmall.render('U12 & above: 4 quarters - ', True, grey, black)
+        textU6 = fontLabelExtraSmall.render('U6:  1 match - ', True, white, black)
+        textU8 = fontLabelExtraSmall.render('U8:  8 quarters - ', True, white, black)
+        textU10 = fontLabelExtraSmall.render('U10: 8 quarters - ', True, white, black)
+        textU12 = fontLabelExtraSmall.render('U12 & above: 4 quarters - ', True, white, black)
 
         scr.fill(black)
         scr.blit(textDuration, textRecDuration)

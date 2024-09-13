@@ -12,7 +12,7 @@ COLOR_KEYPRESSED = (0, 0, 50)  # Blue
 # Key mapping of the keyboard matrix
 MATRIX = [
     ["TimeOutHome", "Periode-", "RestartTimer", "Periode+", "TimeOutAway"],
-    ["FoulHome-", "FoulHome+", "Possession", "FoulAway-", "FoulAway+"],
+    ["FoulHome-", "FoulHome+", "Buzzer", "FoulAway-", "FoulAway+"],
     ["ScoreHome-", "ScoreHome+", "StartStop", "ScoreAway-", "ScoreAway+"]
 ]
 

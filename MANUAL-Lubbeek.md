@@ -1,6 +1,10 @@
+<style>
+r { color: Red }
+</style>
+
 <img align="right" width="256" height="50" src="image/logo.svg">
 
-**Problemen met het scorebord?**<br />
+**Problemen met het scorebord?**            :warning:<r>GEEN GSM IN DE BUURT VAN HET BEDIENINGSPANEEL</r><br />
 Meldt dit via <materiaal@hagelandunited.be> .<br />
 
 **Locatie TV**<br />

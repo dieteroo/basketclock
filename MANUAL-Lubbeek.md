@@ -4,7 +4,7 @@ r { color: Red }
 
 <img align="right" width="256" height="50" src="image/logo.svg">
 
-**Problemen met het scorebord?**            :warning:<r>GEEN GSM IN DE BUURT VAN HET BEDIENINGSPANEEL</r><br />
+**Problemen met het scorebord?**            :warning:<r>GEEN GSM IN DE BUURT VAN HET BEDIENINGSPANEEL</r>:warning:<br />
 Meldt dit via <materiaal@hagelandunited.be> .<br />
 
 **Locatie TV**<br />

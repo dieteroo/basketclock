@@ -4,9 +4,8 @@ r { color: Red }
 
 <img align="right" width="256" height="50" src="image/logo.svg">
 
-**Problemen met het scorebord?**            :warning:<r>GEEN GSM IN DE BUURT VAN HET BEDIENINGSPANEEL</r>:warning:<br />
-Meldt dit via <materiaal@hagelandunited.be> .<br />
-Meldt dit via <materiaal@hagelandunited.be> .<br />
+:warning:<r>GEEN GSM IN DE BUURT VAN HET BEDIENINGSPANEEL</r>:warning:<br />
+**Problemen met het scorebord?**            Meldt&nbsp;dit&nbsp;via&nbsp;<materiaal@hagelandunited.be> .<br />
 
 **Locatie TV**:<br />
 De TV kan je vinden in de opslagruimte waar de ballenrekken zich bevinden (achter het hoge ballenrek).<br />

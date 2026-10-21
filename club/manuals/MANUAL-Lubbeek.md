@@ -2,7 +2,7 @@
 r { color: Red }
 </style>
 
-<img align="right" width="256" height="50" src="image/logo.svg">
+<img align="right" width="256" height="50" src="../logo.svg">
 
 :warning:<r>GEEN GSM IN DE BUURT VAN HET BEDIENINGSPANEEL</r>:warning:<br />
 **Problemen met het scorebord?**            Meldt&nbsp;dit&nbsp;via&nbsp;<materiaal@hagelandunited.be> .<br />
@@ -29,6 +29,8 @@ Het LED-licht toont in welke modus het bedieningspaneel zich bevindt:
 -  Groen: Verbonden met scorebord<br />
 -  Blauw: Toets ingedrukt<br />
 -  Rood: Geen verbinding<br />
+
+Rechtsonder op de TV toont een bolletje of het bedieningspaneel verbonden is met het scorebord: **groen** = verbonden, **rood** = geen verbinding.<br />
 
 **Opstartscherm**<br />
 Op het opstartscherm van het scorebord, is het mogelijk om de standaard tijd van een periode in te stellen zodat het scorebord ook voor U8, U10 en tornooien gebruikt kan worden. Het aanpassen van de tijd kan gebeuren door “PERIOD -" en “PERIOD +" te gebruiken. Wanneer de tijd correct is ingesteld kan je naar de wedstrijd gaan door kort op “START - STOP” te drukken. (Keuzemogelijkheden van 1 minuut tot 12 minuten).<br />
@@ -57,12 +59,14 @@ Alle gegevens worden gewist en je kan opnieuw de duur van de periodes aanpassen 
 - Wanneer je naar extra time gaat worden de time-outs elke periode op 0 gezet.<br />
 - Wanneer je naar extra time gaat (wordt vanaf periode 5 weergegeven als “E”) en op “RESET TIMER” drukt wordt de tijd van de hoofdklok automatisch gehalveerd. (Enkel indien de tijd groter dan of gelijk aan 10 minuten is.)<br />
 - In periode 1 & 2 kan je twee time-outs ingeven, in periode 3 & 4 kan je 3 time-outs ingeven.<br />
-- Er wordt **geen** rekening gehouden met de laatste 2 minuten regel betreffende time-outs.<br />
+- In de laatste 2 minuten van periode 4 kan elke ploeg maximaal 2 time-outs ingeven (enkel bij periodes van 10 minuten of meer).<br />
 - In extra time kan je per periode 1 time-out ingeven.<br />
 - Je kan de hoofdklok ook terugzetten wanneer de tijd niet op 00:00 staat door op de knop “RESET TIMER” te drukken.<br />
+- In de laatste minuut toont de hoofdklok ook tienden van seconden (bv. 12.4).<br />
+- Herstart het scorebord tijdens een wedstrijd (bv. na een storing), dan blijven score, fouten, time-outs en periode bewaard. De hoofdklok staat dan stil: start deze opnieuw met “START - STOP”.<br />
 
 **BEDIENING**<br />
-Hou er rekening mee dat je de knoppen slechts zeer kort - maar kordaat - dient in te drukken.<br />
+Druk de knoppen kort en kordaat in. Een knop ingedrukt houden telt als één keer drukken: laat de knop los om opnieuw te drukken.<br />
  -  GELE knop "RESET TIMER”:<br />
 	Met deze knop kan je de hoofdklok terugzetten naar de normale duur van een periode.<br />
 	Dit **MOET** je doen nadat je naar de volgende periode bent gegaan en voor je deze kan starten.<br />

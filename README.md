@@ -17,6 +17,11 @@ The supported features are:
 - TimeOut home/guest
 - Period
 - Possession
+- Tenths of a second in the last minute
+- Time-out rules (2 in the first half, 3 in the second half, max 2 in the last 2 minutes, 1 per overtime)
+- The game is kept when the program restarts (e.g. after a crash)
+- Connection indicator for the WiFi remote (dot in the bottom right corner)
+- Adapts to the resolution of the TV
 
 ## What is required?
 The basketball scoreboard with clock can be controlled with a wireless keyboard or via a WiFi network.
@@ -40,12 +45,34 @@ The button matrix to be build is 3 horizontal wires and 5 vertical wires followi
  Matrix      | Vertical 1 | Vertical 2 | Vertical 3 | Vertical 4 | Vertical 5
  ------      | ---------- | ---------- | ---------- | -----------| ----------
 Horizontal 1 | TimeOutHome | Periode- | RestartTimer | Periode+ | TimeOutAway
-Horizontal 2 | FoulHome- | FoulHome+ | Possession  | FoulAway- | FoulAway+"
+Horizontal 2 | FoulHome- | FoulHome+ | Buzzer  | FoulAway- | FoulAway+
 Horizontal 3 | ScoreHome- | ScoreHome+ | StartStop | ScoreAway- | ScoreAway+
 
-### Pycom
-In the folder *pycom*, you can find the code for the Pycom microPython device.
+Each button press is sent once (debounced, holding a button does not repeat it). The remote sends a heartbeat
+every 2 seconds, so the scoreboard can show whether the remote is connected.
+
+### Keyboard
+Key | Command | Key | Command
+--- | ------- | --- | -------
+Space | Start / stop clock | T | Reset timer
+S / X | Score home + / - | J / N | Score away + / -
+D / C | Foul home + / - | H / B | Foul away + / -
+E | Time-out home | U | Time-out away
+Y / R | Period + / - | V | Possession
+G | Buzzer | Esc | Quit (restarts when running as a service)
 
 ### NodeMCU
 In the folder *nodemcu*, you can find the code for the NodeMCU microPython device.
 
+## Club settings
+Everything specific to a club is in the folder [club](club): the logo, the settings in
+[config.ini](club/config.ini) and the manuals for the operators.
+
+## Development
+The game rules are in `game.py` and can be tested on any computer, without a Raspberry Pi:
+```bash
+python3 -m unittest discover tests
+```
+
+## License
+[MIT](LICENSE)

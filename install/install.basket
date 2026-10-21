@@ -1,34 +1,46 @@
 #!/bin/bash
+# Installs (or updates) the basketclock program in /opt/basketclock. Safe to run again.
+set -e
 
 ## Change the URL to the project URL
-URL=https://raw.githubusercontent.com/dieteroo/basketclock/test
+URL=https://raw.githubusercontent.com/dieteroo/basketclock/main
+DIR=/opt/basketclock
 
 ## Create program directories
-sudo mkdir /opt/basketclock /opt/basketclock/fonts /opt/basketclock/image /opt/basketclock/sounds
+sudo mkdir -p $DIR/fonts $DIR/image $DIR/sounds $DIR/club
 
-## Download program files
-sudo curl $URL/basketclockthread.py -o /opt/basketclock/basketclockthread.py
-sudo curl $URL/fonts/DejaVuSans-Bold.ttf -o /opt/basketclock/fonts/DejaVuSans-Bold.ttf
-sudo curl $URL/fonts/LED.ttf -o /opt/basketclock/fonts/LED.ttf
-sudo curl $URL/sounds/BUZZER.WAV -o /opt/basketclock/sounds/BUZZER.WAV
-sudo curl $URL/image/logo.svg -o /opt/basketclock/image/logo.svg
-sudo curl $URL/image/loading1.svg -o /opt/basketclock/image/loading1.svg
-sudo curl $URL/image/loading2.svg -o /opt/basketclock/image/loading2.svg
+## Download program files (-f: stop on a missing file instead of saving the error page)
+download() {
+    sudo curl -fsSL "$URL/$1" -o "$DIR/$1"
+}
+for file in basketclockthread.py game.py display.py network.py config.py \
+            fonts/DejaVuSans-Bold.ttf fonts/LED.ttf sounds/BUZZER.WAV \
+            image/loading1.svg image/loading2.svg; do
+    download $file
+done
+## Club files: keep the ones already on the Pi, they may have been changed for the club
+for file in club/config.ini club/logo.svg; do
+    if [ ! -f "$DIR/$file" ]; then
+        download $file
+    fi
+done
+## Older versions had the logo in image/ and the program in one file
+sudo rm -f $DIR/image/logo.svg
 
-## Make sure the system is up to date
+## Make sure the system is up to date (-y everywhere: with "curl | bash" a question would read this script as answer)
 sudo apt-get update
 sudo apt-get upgrade -y
-sudo apt-get autoclean
-sudo apt-get autoremove
+sudo apt-get autoclean -y
+sudo apt-get autoremove -y
 
 ## Important changes
-sudo raspi-config nonint do_resolution 1280 768
+## No fixed resolution: the program uses the resolution of the TV (see club/config.ini)
 sudo raspi-config nonint do_wifi_country BE
 
 # Get the version number from the OS release information
 VERSION=$(grep -oP '(?<=^VERSION_ID=).+' /etc/os-release | tr -d '"')
 
-# Enable audio
+# Enable audio over HDMI (fake KMS driver, works on Raspberry Pi 3)
 case $VERSION in
     11)
         sudo sed -i -e 's/vc4-kms-v3d/vc4-fkms-v3d/' /boot/config.txt
@@ -41,20 +53,22 @@ case $VERSION in
         ;;
 esac
 
-## Install pygame
-sudo apt install python3-pip -y
+## Install pygame and gpiozero
 case $VERSION in
     11)
+        sudo apt-get install -y python3-pip python3-gpiozero
         PIP_BREAK_SYSTEM_PACKAGES=1 python3 -m pip install pygame
+        sudo apt-get install -y libsdl2-2.0-0 libsdl2-ttf-2.0-0 libsdl2-mixer-2.0-0 libsdl2-image-2.0-0 libegl-dev
         ;;
     12)
-        python3 -m pip install pygame --break-system-packages
+        sudo apt-get install -y python3-pygame python3-gpiozero
         ;;
     *)
         echo "Unsupported version: $VERSION"
         ;;
 esac
 
-## Install dependencies
-sudo apt install libsdl2-2.0-0 libsdl2-ttf-2.0-0 libsdl2-mixer-2.0-0 libsdl2-image-2.0-0 -y
-sudo apt install libegl-dev -y
+## Restart the program if it is already installed as a service
+if systemctl is-enabled --quiet basketclock.service 2>/dev/null; then
+    sudo systemctl restart basketclock.service
+fi

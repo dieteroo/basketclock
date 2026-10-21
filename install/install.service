@@ -4,10 +4,12 @@
 cat <<EOF >basketclock.service
 [Unit]
 Description=basketclock autostart
+After=hostapd.service
 
 [Service]
 ExecStart=/usr/bin/python3 /opt/basketclock/basketclockthread.py
-Restart=on-success
+Restart=always
+RestartSec=2
 User=_USER_
 
 [Install]
@@ -15,7 +17,7 @@ WantedBy=multi-user.target
 EOF
 
 ## Alter the run-as username to the current logged in user
-your_USER=$(users)
+your_USER=$(whoami)
 sudo sed -i "s/_USER_/$your_USER/g" basketclock.service
 
 ## Move and enable basketclock.service

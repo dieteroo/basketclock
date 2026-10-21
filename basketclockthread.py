@@ -8,6 +8,8 @@ import socket
 import threading
 from gpiozero import Buzzer # type: ignore
 import select
+import queue
+import re
 
 # Set the default path to the python directory
 sourceFileDir = os.path.dirname(os.path.abspath(__file__))
@@ -49,7 +51,8 @@ PauzeCounterString = ""
 Extra = "E"
 
 # All variables required for the clock
-startTime = time.time()
+# time.monotonic() is used for all timing: time.time() jumps when NTP corrects the clock (the Pi has no RTC)
+startTime = time.monotonic()
 ResetCounter = 600
 PauzeCounter = 0
 StartCounter = ResetCounter  # Startcounter is reset to remaining time when clock is stopped
@@ -250,17 +253,17 @@ def HandleFeedback(keystroke):
                 if Period <= 2 and TimeOutHome < 2:
                     TimeOutHome += 1
                     TimeOutRemaining = TimeOut
-                    TimeOutStart = time.time()
+                    TimeOutStart = time.monotonic()
                     TimeOutRunning = True
                 if Period > 2 and Period <= 4 and TimeOutHome < 3:
                     TimeOutHome += 1
                     TimeOutRemaining = TimeOut
-                    TimeOutStart = time.time()
+                    TimeOutStart = time.monotonic()
                     TimeOutRunning = True
                 if Period > 4 and TimeOutHome == 0:
                     TimeOutHome += 1
                     TimeOutRemaining = TimeOut
-                    TimeOutStart = time.time()
+                    TimeOutStart = time.monotonic()
                     TimeOutRunning = True
     if keystroke == "TimeOutAway":
         if not(StartupScreen):
@@ -268,17 +271,17 @@ def HandleFeedback(keystroke):
                 if Period <= 2 and TimeOutAway < 2:
                     TimeOutAway += 1
                     TimeOutRemaining = TimeOut
-                    TimeOutStart = time.time()
+                    TimeOutStart = time.monotonic()
                     TimeOutRunning = True
                 if Period > 2 and Period <= 4 and TimeOutAway < 3:
                     TimeOutAway += 1
                     TimeOutRemaining = TimeOut
-                    TimeOutStart = time.time()
+                    TimeOutStart = time.monotonic()
                     TimeOutRunning = True
                 if Period > 4 and TimeOutAway == 0:
                     TimeOutAway += 1
                     TimeOutRemaining = TimeOut
-                    TimeOutStart = time.time()
+                    TimeOutStart = time.monotonic()
                     TimeOutRunning = True
     if keystroke == "RestartTimer":
         EndSoundPlayed = False
@@ -300,63 +303,35 @@ def HandleFeedback(keystroke):
         if not(StartupScreen):
             threading.Thread(target=PiezoBuzzer).start()
 
-# Get keyboard inputs
+# Keyboard key -> command mapping
+KeyboardCommands = {
+    pygame.K_SPACE: "StartStop",
+    pygame.K_s: "ScoreHome+",
+    pygame.K_x: "ScoreHome-",
+    pygame.K_d: "FoulHome+",
+    pygame.K_c: "FoulHome-",
+    pygame.K_j: "ScoreAway+",
+    pygame.K_n: "ScoreAway-",
+    pygame.K_h: "FoulAway+",
+    pygame.K_b: "FoulAway-",
+    pygame.K_v: "Possession",
+    pygame.K_y: "Periode+",
+    pygame.K_r: "Periode-",
+    pygame.K_e: "TimeOutHome",
+    pygame.K_u: "TimeOutAway",
+    pygame.K_t: "RestartTimer",
+}
+
+# Get keyboard inputs - returns every key pressed since the last call, so no presses are dropped
 def GetKeyboardInput():
+    keystrokes = []
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+        if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
             pygame.quit()
             sys.exit()
-            GPIO.cleanup()
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                pygame.quit()
-                sys.exit()
-                GPIO.cleanup()
-            if event.key == pygame.K_SPACE:
-                keystroke = "StartStop"
-                return keystroke
-            if event.key == pygame.K_s:
-                keystroke = "ScoreHome+"
-                return keystroke
-            if event.key == pygame.K_x:
-                keystroke = "ScoreHome-"
-                return keystroke
-            if event.key == pygame.K_d:
-                keystroke = "FoulHome+"
-                return keystroke
-            if event.key == pygame.K_c:
-                keystroke = "FoulHome-"
-                return keystroke
-            if event.key == pygame.K_j:
-                keystroke = "ScoreAway+"
-                return keystroke
-            if event.key == pygame.K_n:
-                keystroke = "ScoreAway-"
-                return keystroke
-            if event.key == pygame.K_h:
-                keystroke = "FoulAway+"
-                return keystroke
-            if event.key == pygame.K_b:
-                keystroke = "FoulAway-"
-                return keystroke
-            if event.key == pygame.K_v:
-                keystroke = "Possession"
-                return keystroke
-            if event.key == pygame.K_y:
-                keystroke = "Periode+"
-                return keystroke
-            if event.key == pygame.K_r:
-                keystroke = "Periode-"
-                return keystroke
-            if event.key == pygame.K_e:
-                keystroke = "TimeOutHome"
-                return keystroke
-            if event.key == pygame.K_u:
-                keystroke = "TimeOutAway"
-                return keystroke
-            if event.key == pygame.K_t:
-                keystroke = "RestartTimer"
-                return keystroke
+        if event.type == pygame.KEYDOWN and event.key in KeyboardCommands:
+            keystrokes.append(KeyboardCommands[event.key])
+    return keystrokes
 
 # Function to configure the initial settings
 def ConfigScreen():
@@ -404,35 +379,47 @@ def ConfigScreen():
         scr.blit(textCrono, (50 + textU12.get_width() + text10.get_width(), 640))
         pygame.display.flip()
 
-# Function to handle buzzer thread
-def handle_buzzer_thread():
-    global buzzer
-    while True:
-        if TimeOutRunning == True:
-            if TimeOutRemaining == 10 or TimeOutRemaining == 0:
-                PiezoBuzzer()
-        if RemainingTime == 0:
-            if EndSoundPlayed == False:
-                PiezoBuzzer()
-        sleep(0.1) # Avoid busy-waiting
+# Commands received from the network, consumed by the main loop (thread-safe, nothing gets overwritten)
+NetworkCommands = queue.Queue()
+KnownCommands = ["Nothing", "Buzzer"] + list(KeyboardCommands.values())
+CommandPattern = re.compile("|".join(re.escape(c) for c in sorted(KnownCommands, key=len, reverse=True)))
+
+# Extract all complete commands from the received data, return the unparsed remainder.
+# Works for newline separated commands as well as for older remotes that send commands without separator
+# (TCP can deliver several of those in one packet, e.g. "ScoreHome+ScoreHome+").
+def ParseCommands(buffer):
+    commands = []
+    end = 0
+    for match in CommandPattern.finditer(buffer):
+        commands.append(match.group())
+        end = match.end()
+    remainder = buffer[end:].rsplit("\n", 1)[-1]  # anything before a newline is an unknown command: drop it
+    if len(remainder) > 64:  # garbage without newline: drop it
+        remainder = ""
+    return commands, remainder
 
 # Function to handle network communication
 def handle_network_thread():
-    global keystroke
-
     # Create a TCP/IP socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # Allow reusing the socket
-    sock.bind(('10.3.141.1', 8080))
+    # wlan0 may not have its address yet when the program starts at boot: keep retrying
+    while True:
+        try:
+            sock.bind(('10.3.141.1', 8080))
+            break
+        except OSError as e:
+            print(f"Cannot bind network socket yet ({e}), retrying")
+            sleep(5)
     sock.listen(5)
 
     # Create lists to keep track of sockets for select()
     inputs = [sock]
-    outputs = []
+    buffers = {}  # received but not yet parsed data per connection
 
     while True:
         # Use select to multiplex between sockets
-        readable, _, _ = select.select(inputs, outputs, [])
+        readable, _, _ = select.select(inputs, [], [])
 
         for s in readable:
             if s is sock:  # New connection
@@ -440,81 +427,84 @@ def handle_network_thread():
                 print(f"Connection from {client_address} has been established!")
                 connection.setblocking(0)  # Set socket to non-blocking
                 inputs.append(connection)  # Add new connection to inputs list
+                buffers[connection] = ""
             else:  # Existing connection with incoming data
-                data = s.recv(64)
+                try:
+                    data = s.recv(64)
+                except OSError:
+                    data = b""
                 if data:
-                    keystroke = data.decode().strip()
-#                    HandleFeedback(keystroke)
+                    commands, buffers[s] = ParseCommands(buffers[s] + data.decode(errors="ignore"))
+                    for command in commands:
+                        if command != "Nothing":
+                            NetworkCommands.put(command)
                 else:  # Connection closed
-                    print(f"Connection from {s.getpeername()} closed")
+                    print("Connection closed")
                     inputs.remove(s)  # Remove closed connection from inputs list
+                    del buffers[s]
                     s.close()  # Close the socket
-
-# Start buzzer thread
-buzzer_thread = threading.Thread(target=handle_buzzer_thread)
-buzzer_thread.daemon = True
-buzzer_thread.start()
 
 # Start network thread
 network_thread = threading.Thread(target=handle_network_thread)
 network_thread.daemon = True
 network_thread.start()
 
+# Play the end sound and the piezo buzzer (piezo in a thread so the display keeps updating)
+def Signal():
+    EndSound.play()
+    threading.Thread(target=PiezoBuzzer).start()
+
+# Format seconds as MM:SS, rounding up so the clock shows 00:00 only when time is really up
+def FormatTime(seconds):
+    seconds = math.ceil(seconds)
+    return str(seconds // 60).zfill(2) + ":" + str(seconds % 60).zfill(2)
+
 # The actual program
-running = True
-keystroke = ""
-while running:
+while True:
     if StartupScreen:
         ConfigScreen()
 
 # Handle feedback from keyboard
-    HandleFeedback(GetKeyboardInput())
+    for keystroke in GetKeyboardInput():
+        HandleFeedback(keystroke)
 
 # Handle feedback from network
-    HandleFeedback(keystroke)
-    keystroke = ""
+    while not NetworkCommands.empty():
+        HandleFeedback(NetworkCommands.get_nowait())
 
 # Start/Stop of the clock and count down
+# RemainingTime is kept as a float so stopping the clock does not round away fractions of seconds
     if ClockPauze:
         StartCounter = RemainingTime
-        startTime = time.time()
+        startTime = time.monotonic()
     else:
-        RemainingTime = StartCounter - round(time.time()-startTime)
-    if RemainingTime == 0:
+        RemainingTime = max(0, StartCounter - (time.monotonic()-startTime))
+    if RemainingTime <= 0:
         ClockPauze = True
         if EndSoundPlayed == False:
-            EndSound.play()
-            threading.Thread(target=PiezoBuzzer).start()
+            Signal()
             EndSoundPlayed = True
 
         # Counter that will count up to show pauze time
-        PauzeCounterUp = round(time.time()-PauzeCounter)
-        PauzeCounterMin = math.floor(PauzeCounterUp/60)
-        PauzeCounterSec = PauzeCounterUp - PauzeCounterMin*60
-        PauzeCounterString = str(int(PauzeCounterMin)).zfill(2) + ":" + str(int(PauzeCounterSec)).zfill(2)
+        PauzeCounterString = FormatTime(int(time.monotonic()-PauzeCounter))
 
     else:
-        PauzeCounter = time.time()
+        PauzeCounter = time.monotonic()
         PauzeCounterString = ""
 
-    RemainingMin = math.floor(RemainingTime/60)
-    RemainingSec = RemainingTime - RemainingMin*60
-    RemainingString = str(int(RemainingMin)).zfill(2) + ":" + str(int(RemainingSec)).zfill(2)
+    RemainingString = FormatTime(RemainingTime)
 
 # TimeOut token
     if TimeOutRunning:
         if TimeOutRemaining <= 0:
             TimeOutRunning = False
-            EndSound.play()
-            threading.Thread(target=PiezoBuzzer).start()
+            Signal()
         else:
-            TimeOutRemaining = TimeOut - int(round(time.time()-TimeOutStart))
-            if TimeOutRemaining == 10:
-                EndSound.play()
-                threading.Thread(target=PiezoBuzzer).start()
+            PreviousTimeOutRemaining = TimeOutRemaining
+            TimeOutRemaining = max(0, math.ceil(TimeOut - (time.monotonic()-TimeOutStart)))
+            # Signal once when passing 10 seconds (not on every frame while 10 is shown)
+            if PreviousTimeOutRemaining > 10 >= TimeOutRemaining:
+                Signal()
     if not(StartupScreen):
         ScoreBoardUpdate(ScoreHome, ScoreAway, FoulsHome, FoulsAway, RemainingString, Period, TimeOutRemaining, PauzeCounterString, Possession)
-        time.sleep(0.1)  # Control the update rate
-
-buzzer_thread.stop()
-network_thread.stop()
+    time.sleep(0.1)  # Control the update rate (also for the config screen)

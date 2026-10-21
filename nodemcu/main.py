@@ -11,7 +11,7 @@ COLOR_SERVER_CONNECTED = (0, 50, 0)  # Green
 COLOR_KEYPRESSED = (0, 0, 50)  # Blue
 
 # A key state must be stable this long before it is accepted (filters contact bounce)
-DEBOUNCE_MS = 30
+DEBOUNCE_MS = 20
 SCAN_INTERVAL_MS = 5
 
 # Key mapping of the keyboard matrix

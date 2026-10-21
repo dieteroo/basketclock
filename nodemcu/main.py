@@ -1,5 +1,10 @@
-from time import sleep
+import time
 import usocket
+from machine import Pin
+try:
+    import select
+except ImportError:
+    import uselect as select
 
 # Server settings
 SERVER_IP = '10.3.141.1'
@@ -8,6 +13,13 @@ SERVER_PORT = 8080
 # LED color definitions for different states
 COLOR_SERVER_CONNECTED = (0, 50, 0)  # Green
 COLOR_KEYPRESSED = (0, 0, 50)  # Blue
+
+# A key state must be stable this long before it is accepted (filters contact bounce)
+DEBOUNCE_MS = 20
+SCAN_INTERVAL_MS = 5
+# Heartbeat: lets the scoreboard show whether the remote is connected, and lets the remote
+# notice a lost connection before a real key press gets lost
+HEARTBEAT_MS = 2000
 
 # Key mapping of the keyboard matrix
 MATRIX = [
@@ -22,19 +34,33 @@ OUTPUT_PINS = [17, 16, 4]
 
 def initialize_pins():
     inputs = [Pin(pin, Pin.IN, Pin.PULL_UP) for pin in INPUT_PINS]
-    outputs = [Pin(pin, Pin.OUT) for pin in OUTPUT_PINS]
+    outputs = [Pin(pin, Pin.OUT, value=1) for pin in OUTPUT_PINS]
     return inputs, outputs
 
 def connect_to_server(ip, port):
     client = usocket.socket(usocket.AF_INET, usocket.SOCK_STREAM)
     try:
+        client.settimeout(5)  # never hang on a scoreboard that is off
         client.connect((ip, port))
-        client.send(b'Nothing')
+        client.send(b'Nothing\n')
         return client
     except OSError as e:
         print("Error connecting to server:", e)
         client.close()
         return None
+
+def server_closed(poller, client):
+    # The scoreboard never sends data, so readable means the connection was closed (program restarted)
+    for _, event in poller.poll(0):
+        if event & (select.POLLHUP | select.POLLERR):
+            return True
+        if event & select.POLLIN:
+            try:
+                if not client.recv(16):
+                    return True
+            except OSError:
+                return True
+    return False
 
 def check_inputs(inputs, outputs, matrix):
     keypushed = ""
@@ -56,23 +82,47 @@ def main():
         client = connect_to_server(SERVER_IP, SERVER_PORT)
         if client:
             set_color(*COLOR_SERVER_CONNECTED)  # Green when connected
+            poller = select.poll()
+            poller.register(client, select.POLLIN)
+            stable_key = ""  # debounced key state ("" = nothing pressed)
+            candidate = ""
+            candidate_since = time.ticks_ms()
+            last_heartbeat = time.ticks_ms()
             while True:
-                keypushed = check_inputs(inputs, outputs, MATRIX)
-                if keypushed:
-                    print("Pressed key:", keypushed)
+                key = check_inputs(inputs, outputs, MATRIX)
+                now = time.ticks_ms()
+                if server_closed(poller, client):
+                    print("Scoreboard closed the connection")
+                    client.close()
+                    break  # Exit inner loop to reconnect
+                if time.ticks_diff(now, last_heartbeat) >= HEARTBEAT_MS:
+                    last_heartbeat = now
                     try:
-                        client.send(keypushed.encode())
-                        set_color(*COLOR_KEYPRESSED)  # Blue when pushed
+                        client.send(b'Ping\n')
                     except OSError:
                         client.close()
                         break  # Exit inner loop to reconnect
-                    keypushed = ""
-                    time.sleep(SLEEP_DURATION)
-                    set_color(*COLOR_SERVER_CONNECTED)  # Green when connected
+                if key != candidate:
+                    # State changed (or bounced): restart the stability timer
+                    candidate = key
+                    candidate_since = now
+                elif key != stable_key and time.ticks_diff(now, candidate_since) >= DEBOUNCE_MS:
+                    stable_key = key
+                    if key:
+                        # Send only on the press edge, so holding a button does not repeat
+                        print("Pressed key:", key)
+                        try:
+                            client.send((key + "\n").encode())
+                        except OSError:
+                            client.close()
+                            break  # Exit inner loop to reconnect
+                        set_color(*COLOR_KEYPRESSED)  # Blue while pushed
+                    else:
+                        set_color(*COLOR_SERVER_CONNECTED)  # Green when released
+                time.sleep_ms(SCAN_INTERVAL_MS)
         else:
             set_color(*COLOR_ERROR)  # Red on error
             time.sleep(RETRY_DELAY)
 
 if __name__ == "__main__":
     main()
-

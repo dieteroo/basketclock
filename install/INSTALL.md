@@ -5,11 +5,12 @@
   Select your device 
 * CHOOSE OS
   Select Raspberry Pi OS (other) 
-  - Select Raspberry Pi OS Lite (32-bit)
+  - Select Raspberry Pi OS Lite (32-bit)  (recommended)
     A port of Debian Bookworm with no desktop environment
   OR
   - Select Raspberry Pi OS (Legacy, 32-bit) Lite
     A port of Debian Bullseye with security updates and no desktop environment
+  Tested on a Raspberry Pi 3B+
 * CHOOSE STORAGE 
   Select your storage device 
 * NEXT 
@@ -54,25 +55,34 @@ Size: 365MB
 
 # To install the program run
 ```bash
-curl -sL https://raw.githubusercontent.com/dieteroo/basketclock/test/install/install.basket | bash
+curl -sL https://raw.githubusercontent.com/dieteroo/basketclock/main/install/install.basket | bash
 ```
+
+Running it again later updates the program. Your club settings (`club/config.ini` and `club/logo.svg`) are kept.
+
+# Club settings
+Change the settings in `/opt/basketclock/club/config.ini` (logo, resolution, remote, buzzer pin, ...) and replace
+`/opt/basketclock/club/logo.svg` by your own logo. See [club/config.ini](../club/config.ini) for all settings.
+Do this **before** protecting the boot partition (last step): afterwards changes are lost at reboot.
 
 # If you want to autostart the program run
 ```bash
-curl -sL https://raw.githubusercontent.com/dieteroo/basketclock/test/install/install.service | bash
+curl -sL https://raw.githubusercontent.com/dieteroo/basketclock/main/install/install.service | bash
 ```
 
 # If you want to connect via a micropython device run
 ```bash
-curl -sL https://raw.githubusercontent.com/dieteroo/basketclock/test/install/install.hostapd | bash
+curl -sL https://raw.githubusercontent.com/dieteroo/basketclock/main/install/install.hostapd | bash
 ```
 You will be asked for a SSID, a password and a WiFi-Channel
 
-Afterwards use the files in *pycom* or *nodemcu* to configure the micropython device
+On Bookworm this creates a NetworkManager hotspot, on Bullseye it uses hostapd. The Raspberry Pi gets the address 10.3.141.1 on WiFi.
 
-```Don't forget to change _wifi_SSID_ & _wifi_PASS_ in /pycom/boot.py```
+Afterwards use the files in *nodemcu* to configure the micropython device
+
+```Don't forget to change _wifi_SSID_ & _wifi_PASS_ in /nodemcu/boot.py```
 
 # After all is set and done, protect the boot partition
 ```bash
-curl -sL https://raw.githubusercontent.com/dieteroo/basketclock/test/install/install.boot | bash
+curl -sL https://raw.githubusercontent.com/dieteroo/basketclock/main/install/install.boot | bash
 ```

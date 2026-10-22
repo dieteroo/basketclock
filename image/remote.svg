@@ -154,16 +154,16 @@
       <text
          xml:space="preserve"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.0233px;line-height:0;font-family:'Octin Stencil';-inkscape-font-specification:'Octin Stencil, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.710308;stroke-dasharray:none;stroke-opacity:1"
-         x="97.14183"
+         x="122.57095"
          y="91.21244"
          id="text8-0-1-8"
-         inkscape:label="POSSESSION"
+         inkscape:label="BUZZER"
          transform="scale(0.87704303,1.1401949)"><tspan
            sodipodi:role="line"
            id="tspan8-3-5-1"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.0233px;font-family:'Octin Stencil';-inkscape-font-specification:'Octin Stencil, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.71031"
-           x="97.14183"
-           y="91.21244">POSSESSION</tspan></text>
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.0233px;font-family:'Octin Stencil';-inkscape-font-specification:'Octin Stencil, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.71031;text-anchor:middle;text-align:center"
+           x="122.57095"
+           y="91.21244">BUZZER</tspan></text>
       <rect
          style="display:inline;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.499824;stroke-dasharray:none;stroke-opacity:1"
          id="rect10-6-4-2-0"
@@ -171,7 +171,7 @@
          height="27.500175"
          x="80.249908"
          y="92.749908"
-         inkscape:label="POSSESSION_BOX" />
+         inkscape:label="BUZZER_BOX" />
       <text
          xml:space="preserve"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:0;font-family:Stencilia-A;-inkscape-font-specification:'Stencilia-A, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1"
@@ -619,7 +619,7 @@
       <g
          id="g5-0-5-7-2-7"
          transform="matrix(0.96000009,0,0,0.96001655,76.361491,50.836915)"
-         inkscape:label="POSSESSION"
+         inkscape:label="BUZZER"
          style="fill:#0000ff;fill-opacity:1">
         <circle
            style="fill:#0000ff;fill-opacity:1;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1"
@@ -784,7 +784,7 @@
        height="15.044966"
        x="81.935631"
        y="93.945869"
-       inkscape:label="POSSESSION" />
+       inkscape:label="BUZZER" />
     <rect
        style="display:inline;fill:none;stroke:#000000;stroke-width:0.455033;stroke-dasharray:none"
        id="rect3817-9-37"

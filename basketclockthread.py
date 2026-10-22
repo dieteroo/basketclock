@@ -63,13 +63,12 @@ KeyboardCommands = {
     pygame.K_n: "ScoreAway-",
     pygame.K_h: "FoulAway+",
     pygame.K_b: "FoulAway-",
-    pygame.K_v: "Possession",
+    pygame.K_v: "Buzzer",  # Possession is not used; map a key to "Possession" to show the arrow again
     pygame.K_y: "Periode+",
     pygame.K_r: "Periode-",
     pygame.K_e: "TimeOutHome",
     pygame.K_u: "TimeOutAway",
     pygame.K_t: "RestartTimer",
-    pygame.K_g: "Buzzer",
 }
 
 def GetKeyboardInput():

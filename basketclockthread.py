@@ -11,6 +11,8 @@ import pygame # type: ignore
 # Set the default path to the python directory
 sourceFileDir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(sourceFileDir)
+# lgpio (used by gpiozero) creates files in its working folder, the program folder is read-only for the user
+os.environ.setdefault("LG_WD", "/tmp")
 
 from config import load_config
 from display import Display

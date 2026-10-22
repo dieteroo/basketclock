@@ -61,7 +61,8 @@ case $VERSION in
         sudo apt-get install -y libsdl2-2.0-0 libsdl2-ttf-2.0-0 libsdl2-mixer-2.0-0 libsdl2-image-2.0-0 libegl-dev
         ;;
     12)
-        sudo apt-get install -y python3-pygame python3-gpiozero
+        # libegl1 + libgles2: SDL draws directly on the screen (no desktop) with EGL, pygame does not pull it in
+        sudo apt-get install -y python3-pygame python3-gpiozero libegl1 libgles2
         ;;
     *)
         echo "Unsupported version: $VERSION"

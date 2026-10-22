@@ -61,8 +61,10 @@ case $VERSION in
         sudo apt-get install -y libsdl2-2.0-0 libsdl2-ttf-2.0-0 libsdl2-mixer-2.0-0 libsdl2-image-2.0-0 libegl-dev
         ;;
     12)
-        # libegl1 + libgles2: SDL draws directly on the screen (no desktop) with EGL, pygame does not pull it in
-        sudo apt-get install -y python3-pygame python3-gpiozero libegl1 libgles2
+        # libegl-dev: SDL draws directly on the screen (no desktop) with EGL; it pulls in libegl1 and
+        # libgl1-mesa-dri, the Mesa GPU driver. Without that driver the screen stays black.
+        # python3-pygame does not depend on either of them.
+        sudo apt-get install -y python3-pygame python3-gpiozero libegl-dev
         ;;
     *)
         echo "Unsupported version: $VERSION"

@@ -13,6 +13,9 @@ sourceFileDir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(sourceFileDir)
 # lgpio (used by gpiozero) creates files in its working folder, the program folder is read-only for the user
 os.environ.setdefault("LG_WD", "/tmp")
+# Wait for the screen refresh when showing a frame: the fkms display driver refuses the default
+# "async" page flips and logs an error for every frame (about 20 per second)
+os.environ.setdefault("SDL_RENDER_VSYNC", "1")
 
 from config import load_config
 from display import Display

@@ -16,7 +16,7 @@ The supported features are:
 - Score home/guest
 - TimeOut home/guest
 - Period
-- Possession
+- Possession arrow (in the code, not mapped to a key or button at the moment)
 - Tenths of a second in the last minute
 - Time-out rules (2 in the first half, 3 in the second half, max 2 in the last 2 minutes, 1 per overtime)
 - The game is kept when the program restarts (e.g. after a crash)
@@ -58,8 +58,8 @@ Space | Start / stop clock | T | Reset timer
 S / X | Score home + / - | J / N | Score away + / -
 D / C | Foul home + / - | H / B | Foul away + / -
 E | Time-out home | U | Time-out away
-Y / R | Period + / - | V | Possession
-G | Buzzer | Esc | Quit (restarts when running as a service)
+Y / R | Period + / - | V | Buzzer
+Esc | Quit (restarts when running as a service) | |
 
 ### NodeMCU
 In the folder *nodemcu*, you can find the code for the NodeMCU microPython device.

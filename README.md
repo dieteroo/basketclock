@@ -40,8 +40,7 @@ The basketball scoreboard with clock can be controlled with a wireless keyboard 
   
 ### Remote keyboard
 The Remote keyboard is based upon a button matrix of 3x5. The wiring (button matrix, wire colours,
-ESP32 pins and the status LED) is drawn in [nodemcu/wiring.html](nodemcu/wiring.html): download it
-and open it in a browser.
+ESP32 pins and the status LED) is described in [nodemcu/WIRING.md](nodemcu/WIRING.md).
 
 Each button press is sent once (debounced, holding a button does not repeat it). The remote sends a heartbeat
 every 2 seconds, so the scoreboard can show whether the remote is connected.

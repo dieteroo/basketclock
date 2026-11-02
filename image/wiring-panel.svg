@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 420" width="680" height="420">
+<title>Remote panel seen from the wiring side, with the wire colour on each button leg</title>
+<rect width="680" height="420" fill="#ffffff"/>
+<rect x="8" y="8" width="664" height="404" rx="14" fill="#d9dcd8" stroke="#c4c9c5"/>
+<text x="120" y="46" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#1d2220">AWAY</text>
+<text x="560" y="46" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#1d2220">HOME</text>
+<circle cx="120" cy="100" r="17" fill="#f9faf8" stroke="#1d2220" stroke-width="2.5"/>
+<circle cx="120" cy="100" r="9" fill="#c4c9c5"/>
+<circle cx="111" cy="130" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="111" cy="130" r="6" fill="#7b4a2b"/>
+<circle cx="129" cy="130" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="129" cy="130" r="6" fill="#d8243f"/>
+<text x="120" y="75" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#1d2220">Away time-out</text>
+<circle cx="75" cy="205" r="17" fill="#f9faf8" stroke="#1d2220" stroke-width="2.5"/>
+<circle cx="75" cy="205" r="9" fill="#c4c9c5"/>
+<circle cx="66" cy="235" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="66" cy="235" r="6" fill="#f06a1c"/>
+<circle cx="84" cy="235" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="84" cy="235" r="6" fill="#d8243f"/>
+<text x="75" y="180" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#1d2220">Away foul +</text>
+<circle cx="165" cy="205" r="17" fill="#f9faf8" stroke="#1d2220" stroke-width="2.5"/>
+<circle cx="165" cy="205" r="9" fill="#c4c9c5"/>
+<circle cx="156" cy="235" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="156" cy="235" r="6" fill="#f06a1c"/>
+<circle cx="174" cy="235" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="174" cy="235" r="6" fill="#2150d6"/>
+<text x="165" y="180" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#1d2220">Away foul −</text>
+<circle cx="75" cy="320" r="17" fill="#f9faf8" stroke="#1d2220" stroke-width="2.5"/>
+<circle cx="75" cy="320" r="9" fill="#c4c9c5"/>
+<circle cx="66" cy="350" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="66" cy="350" r="6" fill="#8b9097"/>
+<circle cx="84" cy="350" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="84" cy="350" r="6" fill="#d8243f"/>
+<text x="75" y="295" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#1d2220">Away score +</text>
+<circle cx="165" cy="320" r="17" fill="#f9faf8" stroke="#1d2220" stroke-width="2.5"/>
+<circle cx="165" cy="320" r="9" fill="#c4c9c5"/>
+<circle cx="156" cy="350" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="156" cy="350" r="6" fill="#8b9097"/>
+<circle cx="174" cy="350" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="174" cy="350" r="6" fill="#2150d6"/>
+<text x="165" y="295" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#1d2220">Away score −</text>
+<circle cx="340" cy="80" r="17" fill="#f9faf8" stroke="#1d2220" stroke-width="2.5"/>
+<circle cx="340" cy="80" r="9" fill="#c4c9c5"/>
+<circle cx="331" cy="110" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="331" cy="110" r="6" fill="#7b4a2b"/>
+<circle cx="349" cy="110" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="349" cy="110" r="6" fill="#f6f6f2"/>
+<text x="340" y="55" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#1d2220">Reset timer</text>
+<circle cx="285" cy="165" r="17" fill="#f9faf8" stroke="#1d2220" stroke-width="2.5"/>
+<circle cx="285" cy="165" r="9" fill="#c4c9c5"/>
+<circle cx="276" cy="195" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="276" cy="195" r="6" fill="#7b4a2b"/>
+<circle cx="294" cy="195" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="294" cy="195" r="6" fill="#2150d6"/>
+<text x="285" y="140" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#1d2220">Period +</text>
+<circle cx="395" cy="165" r="17" fill="#f9faf8" stroke="#1d2220" stroke-width="2.5"/>
+<circle cx="395" cy="165" r="9" fill="#c4c9c5"/>
+<circle cx="386" cy="195" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="386" cy="195" r="6" fill="#7b4a2b"/>
+<circle cx="404" cy="195" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="404" cy="195" r="6" fill="#12895a"/>
+<text x="395" y="140" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#1d2220">Period −</text>
+<circle cx="340" cy="245" r="17" fill="#f9faf8" stroke="#1d2220" stroke-width="2.5"/>
+<circle cx="340" cy="245" r="9" fill="#c4c9c5"/>
+<circle cx="331" cy="275" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="331" cy="275" r="6" fill="#f06a1c"/>
+<circle cx="349" cy="275" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="349" cy="275" r="6" fill="#f6f6f2"/>
+<text x="340" y="220" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#1d2220">Buzzer</text>
+<circle cx="340" cy="330" r="17" fill="#f9faf8" stroke="#1d2220" stroke-width="2.5"/>
+<circle cx="340" cy="330" r="9" fill="#c4c9c5"/>
+<circle cx="331" cy="360" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="331" cy="360" r="6" fill="#8b9097"/>
+<circle cx="349" cy="360" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="349" cy="360" r="6" fill="#f6f6f2"/>
+<text x="340" y="305" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#1d2220">Start-stop</text>
+<circle cx="560" cy="100" r="17" fill="#f9faf8" stroke="#1d2220" stroke-width="2.5"/>
+<circle cx="560" cy="100" r="9" fill="#c4c9c5"/>
+<circle cx="551" cy="130" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="551" cy="130" r="6" fill="#7b4a2b"/>
+<circle cx="569" cy="130" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="569" cy="130" r="6" fill="#f3c52c"/>
+<text x="560" y="75" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#1d2220">Home time-out</text>
+<circle cx="515" cy="205" r="17" fill="#f9faf8" stroke="#1d2220" stroke-width="2.5"/>
+<circle cx="515" cy="205" r="9" fill="#c4c9c5"/>
+<circle cx="506" cy="235" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="506" cy="235" r="6" fill="#f06a1c"/>
+<circle cx="524" cy="235" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="524" cy="235" r="6" fill="#12895a"/>
+<text x="515" y="180" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#1d2220">Home foul +</text>
+<circle cx="605" cy="205" r="17" fill="#f9faf8" stroke="#1d2220" stroke-width="2.5"/>
+<circle cx="605" cy="205" r="9" fill="#c4c9c5"/>
+<circle cx="596" cy="235" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="596" cy="235" r="6" fill="#f06a1c"/>
+<circle cx="614" cy="235" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="614" cy="235" r="6" fill="#f3c52c"/>
+<text x="605" y="180" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#1d2220">Home foul −</text>
+<circle cx="515" cy="320" r="17" fill="#f9faf8" stroke="#1d2220" stroke-width="2.5"/>
+<circle cx="515" cy="320" r="9" fill="#c4c9c5"/>
+<circle cx="506" cy="350" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="506" cy="350" r="6" fill="#8b9097"/>
+<circle cx="524" cy="350" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="524" cy="350" r="6" fill="#12895a"/>
+<text x="515" y="295" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#1d2220">Home score +</text>
+<circle cx="605" cy="320" r="17" fill="#f9faf8" stroke="#1d2220" stroke-width="2.5"/>
+<circle cx="605" cy="320" r="9" fill="#c4c9c5"/>
+<circle cx="596" cy="350" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="596" cy="350" r="6" fill="#8b9097"/>
+<circle cx="614" cy="350" r="7.2" fill="rgba(29,34,32,0.55)"/>
+<circle cx="614" cy="350" r="6" fill="#f3c52c"/>
+<text x="605" y="295" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#1d2220">Home score −</text>
+</svg>

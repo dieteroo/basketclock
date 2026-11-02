@@ -39,14 +39,9 @@ The basketball scoreboard with clock can be controlled with a wireless keyboard 
 [Installation manual](install/INSTALL.md)
   
 ### Remote keyboard
-The Remote keyboard is based upon a button matrix of 3x5.  The micropython device will scan this matrix and use a network socket to send the button pressed, to the Raspbian. Note that the Raspbian handles the button pushed in the same way as a command from the keyboard.
-The button matrix to be build is 3 horizontal wires and 5 vertical wires following this design:
-
- Matrix      | Vertical 1 | Vertical 2 | Vertical 3 | Vertical 4 | Vertical 5
- ------      | ---------- | ---------- | ---------- | -----------| ----------
-Horizontal 1 | TimeOutHome | Periode- | RestartTimer | Periode+ | TimeOutAway
-Horizontal 2 | FoulHome- | FoulHome+ | Buzzer  | FoulAway- | FoulAway+
-Horizontal 3 | ScoreHome- | ScoreHome+ | StartStop | ScoreAway- | ScoreAway+
+The Remote keyboard is based upon a button matrix of 3x5. The wiring (button matrix, wire colours,
+ESP32 pins and the status LED) is drawn in [nodemcu/wiring.html](nodemcu/wiring.html): download it
+and open it in a browser.
 
 Each button press is sent once (debounced, holding a button does not repeat it). The remote sends a heartbeat
 every 2 seconds, so the scoreboard can show whether the remote is connected.

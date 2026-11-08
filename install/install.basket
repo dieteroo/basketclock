@@ -6,6 +6,16 @@ set -e
 URL=https://raw.githubusercontent.com/dieteroo/basketclock/main
 DIR=/opt/basketclock
 
+# Get the version number from the OS release information: 11 Bullseye, 12 Bookworm, 13 Trixie
+VERSION=$(grep -oP '(?<=^VERSION_ID=).+' /etc/os-release | tr -d '"')
+case $VERSION in
+    11|12|13) ;;
+    *)
+        echo "Unsupported Raspberry Pi OS version: $VERSION (supported: 11 Bullseye, 12 Bookworm, 13 Trixie)"
+        exit 1
+        ;;
+esac
+
 ## Create program directories
 sudo mkdir -p $DIR/fonts $DIR/image $DIR/sounds $DIR/club
 
@@ -37,19 +47,13 @@ sudo apt-get autoremove -y
 ## No fixed resolution: the program uses the resolution of the TV (see club/config.ini)
 sudo raspi-config nonint do_wifi_country BE
 
-# Get the version number from the OS release information
-VERSION=$(grep -oP '(?<=^VERSION_ID=).+' /etc/os-release | tr -d '"')
-
 # Enable audio over HDMI (fake KMS driver, works on Raspberry Pi 3)
 case $VERSION in
     11)
         sudo sed -i -e 's/vc4-kms-v3d/vc4-fkms-v3d/' /boot/config.txt
         ;;
-    12)
+    12|13)
         sudo sed -i -e 's/vc4-kms-v3d/vc4-fkms-v3d/' /boot/firmware/config.txt
-        ;;
-    *)
-        echo "Unsupported version: $VERSION"
         ;;
 esac
 
@@ -60,14 +64,11 @@ case $VERSION in
         PIP_BREAK_SYSTEM_PACKAGES=1 python3 -m pip install pygame
         sudo apt-get install -y libsdl2-2.0-0 libsdl2-ttf-2.0-0 libsdl2-mixer-2.0-0 libsdl2-image-2.0-0 libegl-dev
         ;;
-    12)
+    12|13)
         # libegl-dev: SDL draws directly on the screen (no desktop) with EGL; it pulls in libegl1 and
         # libgl1-mesa-dri, the Mesa GPU driver. Without that driver the screen stays black.
         # python3-pygame does not depend on either of them.
         sudo apt-get install -y python3-pygame python3-gpiozero libegl-dev
-        ;;
-    *)
-        echo "Unsupported version: $VERSION"
         ;;
 esac
 

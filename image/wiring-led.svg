@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 230" width="680" height="230">
-<title>Status LED wiring: red through a 120 ohm resistor, green, blue and common ground</title>
+<title>Status LED wiring: red through 150 ohm, green and blue through 47 ohm, common ground</title>
 <rect width="680" height="230" fill="#ffffff"/>
 <rect x="20" y="30" width="120" height="170" rx="8" fill="#d9dcd8" stroke="#1d2220" stroke-width="1.5"/>
 <text x="80" y="54" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#1d2220">ESP32</text>
 <rect x="280" y="50" width="110" height="140" rx="4" fill="#cfe9dc" stroke="#12895a"/>
-<text x="335" y="42" font-family="Menlo, Consolas, monospace" font-size="11" font-weight="normal" text-anchor="middle" fill="#5d6662">perfboard · 120 Ω in red</text>
+<text x="335" y="42" font-family="Menlo, Consolas, monospace" font-size="11" font-weight="normal" text-anchor="middle" fill="#5d6662">perfboard</text>
 <circle cx="590" cy="115" r="30" fill="#f9faf8" stroke="#1d2220" stroke-width="2"/>
 <text x="590" y="120" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" text-anchor="middle" fill="#1d2220">RGB</text>
 <text x="590" y="168" font-family="Menlo, Consolas, monospace" font-size="11" font-weight="normal" text-anchor="middle" fill="#5d6662">common cathode</text>
@@ -14,8 +14,8 @@
 <path d="M280,80 L305,80" fill="none" stroke="#d8243f" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
 <path d="M365,80 L390,80" fill="none" stroke="rgba(29,34,32,0.55)" stroke-width="5.5" stroke-linejoin="round" stroke-linecap="round"/>
 <path d="M365,80 L390,80" fill="none" stroke="#d8243f" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
-<rect x="305" y="73" width="60" height="14" rx="4" fill="#f9faf8" stroke="#1d2220" stroke-width="1.5"/>
-<text x="335" y="84" font-family="Menlo, Consolas, monospace" font-size="11" font-weight="normal" text-anchor="middle" fill="#5d6662">R</text>
+<rect x="305" y="72" width="60" height="16" rx="4" fill="#f9faf8" stroke="#1d2220" stroke-width="1.5"/>
+<text x="335" y="84" font-family="Menlo, Consolas, monospace" font-size="11" font-weight="normal" text-anchor="middle" fill="#5d6662">150 Ω</text>
 <path d="M390,80 L470,80 L560,100" fill="none" stroke="rgba(29,34,32,0.55)" stroke-width="6.5" stroke-linejoin="round" stroke-linecap="round"/>
 <path d="M390,80 L470,80 L560,100" fill="none" stroke="#d8243f" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
 <text x="132" y="84" font-family="Menlo, Consolas, monospace" font-size="11" font-weight="normal" text-anchor="end" fill="#5d6662">GPIO 19</text>
@@ -32,8 +32,12 @@
 <text x="400" y="105" font-family="Menlo, Consolas, monospace" font-size="11" font-weight="normal" text-anchor="start" fill="#5d6662">ground (longest leg)</text>
 <path d="M140,144 L280,144" fill="none" stroke="rgba(29,34,32,0.55)" stroke-width="6.5" stroke-linejoin="round" stroke-linecap="round"/>
 <path d="M140,144 L280,144" fill="none" stroke="#12895a" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
-<path d="M280,144 L390,144" fill="none" stroke="rgba(29,34,32,0.55)" stroke-width="5.5" stroke-linejoin="round" stroke-linecap="round"/>
-<path d="M280,144 L390,144" fill="none" stroke="#12895a" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M280,144 L305,144" fill="none" stroke="rgba(29,34,32,0.55)" stroke-width="5.5" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M280,144 L305,144" fill="none" stroke="#12895a" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M365,144 L390,144" fill="none" stroke="rgba(29,34,32,0.55)" stroke-width="5.5" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M365,144 L390,144" fill="none" stroke="#12895a" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="305" y="136" width="60" height="16" rx="4" fill="#f9faf8" stroke="#1d2220" stroke-width="1.5"/>
+<text x="335" y="148" font-family="Menlo, Consolas, monospace" font-size="11" font-weight="normal" text-anchor="middle" fill="#5d6662">47 Ω</text>
 <path d="M390,144 L470,144 L560,120" fill="none" stroke="rgba(29,34,32,0.55)" stroke-width="6.5" stroke-linejoin="round" stroke-linecap="round"/>
 <path d="M390,144 L470,144 L560,120" fill="none" stroke="#12895a" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
 <text x="132" y="148" font-family="Menlo, Consolas, monospace" font-size="11" font-weight="normal" text-anchor="end" fill="#5d6662">GPIO 18</text>
@@ -41,8 +45,12 @@
 <text x="400" y="137" font-family="Menlo, Consolas, monospace" font-size="11" font-weight="normal" text-anchor="start" fill="#5d6662">green</text>
 <path d="M140,176 L280,176" fill="none" stroke="rgba(29,34,32,0.55)" stroke-width="6.5" stroke-linejoin="round" stroke-linecap="round"/>
 <path d="M140,176 L280,176" fill="none" stroke="#2150d6" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
-<path d="M280,176 L390,176" fill="none" stroke="rgba(29,34,32,0.55)" stroke-width="5.5" stroke-linejoin="round" stroke-linecap="round"/>
-<path d="M280,176 L390,176" fill="none" stroke="#2150d6" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M280,176 L305,176" fill="none" stroke="rgba(29,34,32,0.55)" stroke-width="5.5" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M280,176 L305,176" fill="none" stroke="#2150d6" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M365,176 L390,176" fill="none" stroke="rgba(29,34,32,0.55)" stroke-width="5.5" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M365,176 L390,176" fill="none" stroke="#2150d6" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="305" y="168" width="60" height="16" rx="4" fill="#f9faf8" stroke="#1d2220" stroke-width="1.5"/>
+<text x="335" y="180" font-family="Menlo, Consolas, monospace" font-size="11" font-weight="normal" text-anchor="middle" fill="#5d6662">47 Ω</text>
 <path d="M390,176 L470,176 L560,130" fill="none" stroke="rgba(29,34,32,0.55)" stroke-width="6.5" stroke-linejoin="round" stroke-linecap="round"/>
 <path d="M390,176 L470,176 L560,130" fill="none" stroke="#2150d6" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
 <text x="132" y="180" font-family="Menlo, Consolas, monospace" font-size="11" font-weight="normal" text-anchor="end" fill="#5d6662">GPIO 5</text>

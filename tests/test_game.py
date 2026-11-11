@@ -64,6 +64,18 @@ class ClockTest(unittest.TestCase):
         self.assertEqual(game.pause_text(60), "00:00")
         self.assertEqual(game.pause_text(135.5), "01:15")
 
+    def test_pause_stops_clock_but_not_timeout(self):
+        game = started_game()
+        game.handle("StartStop", 0)
+        game.pause(12.5)
+        self.assertFalse(game.running)
+        self.assertAlmostEqual(game.remaining(100), 587.5)
+        game.pause(100)  # already stopped: nothing changes
+        self.assertAlmostEqual(game.remaining(100), 587.5)
+        game.handle("TimeOutHome", 100)
+        game.pause(110)
+        self.assertEqual(game.timeout_left(110), 50)
+
     def test_restart_timer_only_when_stopped(self):
         game = started_game()
         game.handle("StartStop", 0)

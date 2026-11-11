@@ -20,7 +20,7 @@ os.environ.setdefault("SDL_RENDER_VSYNC", "1")
 from config import load_config
 from display import Display
 from game import Game
-from network import RemoteServer
+from network import CONNECTION_LOST, RemoteServer
 
 FPS = 20  # screen updates per second (tenths of a second need more than 10)
 
@@ -127,7 +127,9 @@ while True:
         while not remote.commands.empty():
             commands.append(remote.commands.get_nowait())
     for command in commands:
-        if game.handle(command, now):
+        if command == CONNECTION_LOST:
+            game.pause(now)  # nobody can stop the clock with the remote anymore
+        elif game.handle(command, now):
             Signal(sound=False)  # manual buzzer
 
     if game.tick(now):

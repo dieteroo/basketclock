@@ -79,6 +79,10 @@ def main():
     inputs, outputs = initialize_pins()
 
     while True:
+        # wlan, set_color and the colours come from boot.py. The ESP32 reconnects to the WiFi by itself.
+        while not wlan.isconnected():
+            set_color(*COLOR_CONNECTING)  # Purple until the WiFi is back
+            time.sleep_ms(500)
         client = connect_to_server(SERVER_IP, SERVER_PORT)
         if client:
             set_color(*COLOR_SERVER_CONNECTED)  # Green when connected
@@ -93,6 +97,12 @@ def main():
                 now = time.ticks_ms()
                 if server_closed(poller, client):
                     print("Scoreboard closed the connection")
+                    client.close()
+                    break  # Exit inner loop to reconnect
+                if not wlan.isconnected():
+                    # The scoreboard is the WiFi hotspot: without WiFi the connection is gone. TCP itself only
+                    # notices that after minutes (sends keep succeeding into the send buffer), so do not wait.
+                    print("WiFi lost")
                     client.close()
                     break  # Exit inner loop to reconnect
                 if time.ticks_diff(now, last_heartbeat) >= HEARTBEAT_MS:

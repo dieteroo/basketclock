@@ -124,8 +124,7 @@ class Game:
         elif command == "StartStop":
             if not self.timeout_running:
                 if self.running:
-                    self.clock_base = self.remaining(now)
-                    self.clock_started_at = None
+                    self.pause(now)
                 else:
                     self.clock_started_at = now
         elif command == "Possession":
@@ -156,6 +155,12 @@ class Game:
                 if self.period == 0:
                     self.new_game()
         return False
+
+    def pause(self, now):
+        """Stop the game clock (when the remote is lost, so nobody can stop it anymore). A time-out keeps running."""
+        if self.running:
+            self.clock_base = self.remaining(now)
+            self.clock_started_at = None
 
     def _handle_config(self, command):
         if command == "StartStop":

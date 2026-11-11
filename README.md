@@ -21,6 +21,7 @@ The supported features are:
 - Time-out rules (2 in the first half, 3 in the second half, max 2 in the last 2 minutes, 1 per overtime)
 - The game is kept when the program restarts (e.g. after a crash)
 - Connection indicator for the WiFi remote (dot in the bottom right corner)
+- The clock is paused when the connection with the WiFi remote is lost
 - Adapts to the resolution of the TV
 
 ## What is required?
@@ -44,6 +45,10 @@ ESP32 pins and the status LED) is described in [nodemcu/WIRING.md](nodemcu/WIRIN
 
 Each button press is sent once (debounced, holding a button does not repeat it). The remote sends a heartbeat
 every 2 seconds, so the scoreboard can show whether the remote is connected.
+When the connection is lost (no heartbeat for 6 seconds), the
+scoreboard pauses the clock. The remote reconnects by itself: after a lost WiFi connection it reconnects as soon as
+the WiFi is back, and a remote that restarted (power, reset) is logged off the hotspot after 15 seconds without a
+connection, because the Raspberry Pi's WiFi chip refuses a remote it still thinks is connected.
 
 ### Keyboard
 Key | Command | Key | Command

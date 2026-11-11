@@ -1,6 +1,17 @@
 #!/bin/bash
 # Turns the Raspberry Pi into a WiFi access point (10.3.141.1) for the remote. Safe to run again.
-# Bookworm: NetworkManager hotspot. Bullseye: hostapd.
+# Bookworm and Trixie: NetworkManager hotspot. Bullseye: hostapd.
+
+# Get the version number from the OS release information (before the questions, so an unsupported
+# version stops right away)
+VERSION=$(grep -oP '(?<=^VERSION_ID=).+' /etc/os-release | tr -d '"')
+case $VERSION in
+  11|12|13) ;;
+  *)
+    echo "Unsupported Raspberry Pi OS version: $VERSION (supported: 11 Bullseye, 12 Bookworm, 13 Trixie)"
+    exit 1
+    ;;
+esac
 
 # Get variables
 while true; do
@@ -23,11 +34,8 @@ while true; do
   echo "The channel must be a number from 1 to 13."
 done
 
-# Get the version number from the OS release information
-VERSION=$(grep -oP '(?<=^VERSION_ID=).+' /etc/os-release | tr -d '"')
-
 case $VERSION in
-  12)
+  12|13)
     # Undo the settings of older versions of this script, they keep NetworkManager away from wlan0
     sudo rm -f /etc/NetworkManager/conf.d/ignore-wlan0.conf
     if [ -f /etc/network/interfaces ]; then

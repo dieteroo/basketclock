@@ -5,11 +5,12 @@
   Select your device 
 * CHOOSE OS
   Select Raspberry Pi OS (other) 
-  - Select Raspberry Pi OS Lite (32-bit)  (recommended)
-    A port of Debian Bookworm with no desktop environment
+  - Select Raspberry Pi OS Lite (32-bit)
+    A port of Debian Trixie (13) with no desktop environment
   OR
-  - Select Raspberry Pi OS (Legacy, 32-bit) Lite
-    A port of Debian Bullseye with security updates and no desktop environment
+  - Select Raspberry Pi OS (Legacy, 32-bit) Lite  (recommended, tested)
+    A port of Debian Bookworm (12) with no desktop environment
+  Debian Bullseye (11) is supported as well
   Tested on a Raspberry Pi 3B+
 * CHOOSE STORAGE 
   Select your storage device 
@@ -76,7 +77,7 @@ curl -sL https://raw.githubusercontent.com/dieteroo/basketclock/main/install/ins
 ```
 You will be asked for a SSID, a password and a WiFi-Channel
 
-On Bookworm this creates a NetworkManager hotspot, on Bullseye it uses hostapd. The Raspberry Pi gets the address 10.3.141.1 on WiFi.
+On Bookworm and Trixie this creates a NetworkManager hotspot, on Bullseye it uses hostapd. The Raspberry Pi gets the address 10.3.141.1 on WiFi.
 
 Afterwards use the files in *nodemcu* to configure the micropython device
 

@@ -91,7 +91,10 @@ EOF'
     sudo apt-get install hostapd -y
 
     # Create the hostapd configuration file (values written directly, so special characters are no problem)
+    # ctrl_interface: lets the scoreboard (group netdev) log a restarted remote off with hostapd_cli
     sudo tee /etc/hostapd/hostapd.conf > /dev/null <<EOF
+ctrl_interface=/var/run/hostapd
+ctrl_interface_group=netdev
 interface=wlan0
 driver=nl80211
 ssid=$your_SSID

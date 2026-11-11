@@ -31,6 +31,7 @@ Het LED-licht toont in welke modus het bedieningspaneel zich bevindt:
 -  Rood: Geen verbinding<br />
 
 Rechtsonder op de TV toont een bolletje of het bedieningspaneel verbonden is met het scorebord: **groen** = verbonden, **rood** = geen verbinding.<br />
+Valt de verbinding weg terwijl de klok loopt, dan zet het scorebord de klok automatisch stil. Het bedieningspaneel maakt vanzelf opnieuw verbinding (binnen een halve minuut); start de klok daarna opnieuw met START-STOP.<br />
 
 **Opstartscherm**<br />
 Op het opstartscherm van het scorebord, is het mogelijk om de standaard tijd van een periode in te stellen zodat het scorebord ook voor U8, U10 en tornooien gebruikt kan worden. Het aanpassen van de tijd kan gebeuren door “PERIOD -" en “PERIOD +" te gebruiken. Wanneer de tijd correct is ingesteld kan je naar de wedstrijd gaan door kort op “START - STOP” te drukken. (Keuzemogelijkheden van 1 minuut tot 12 minuten).<br />
